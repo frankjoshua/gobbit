@@ -1,0 +1,2 @@
+l298n
+-DCATKIN_DEVEL_PREFIX=/home/pi/L295_ros_node_docker/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/pi/L295_ros_node_docker/catkin_ws/install -G Unix Makefiles

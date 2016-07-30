@@ -1,0 +1,57 @@
+Determining if the pthread_create exist failed with the following output:
+Change Dir: /home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec3365302093/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec3365302093.dir/build.make CMakeFiles/cmTryCompileExec3365302093.dir/build
+make[1]: Entering directory '/home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec3365302093.dir/CheckSymbolExists.c.o
+/usr/bin/cc    -o CMakeFiles/cmTryCompileExec3365302093.dir/CheckSymbolExists.c.o   -c /home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c
+Linking C executable cmTryCompileExec3365302093
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec3365302093.dir/link.txt --verbose=1
+/usr/bin/cc       CMakeFiles/cmTryCompileExec3365302093.dir/CheckSymbolExists.c.o  -o cmTryCompileExec3365302093 -rdynamic 
+CMakeFiles/cmTryCompileExec3365302093.dir/CheckSymbolExists.c.o: In function `main':
+CheckSymbolExists.c:(.text+0x38): undefined reference to `pthread_create'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec3365302093.dir/build.make:88: recipe for target 'cmTryCompileExec3365302093' failed
+make[1]: *** [cmTryCompileExec3365302093] Error 1
+make[1]: Leaving directory '/home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:118: recipe for target 'cmTryCompileExec3365302093/fast' failed
+make: *** [cmTryCompileExec3365302093/fast] Error 2
+
+File /home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <pthread.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef pthread_create
+  return ((int*)(&pthread_create))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp
+
+Run Build Command:"/usr/bin/make" "cmTryCompileExec2025495422/fast"
+/usr/bin/make -f CMakeFiles/cmTryCompileExec2025495422.dir/build.make CMakeFiles/cmTryCompileExec2025495422.dir/build
+make[1]: Entering directory '/home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp'
+/usr/bin/cmake -E cmake_progress_report /home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp/CMakeFiles 1
+Building C object CMakeFiles/cmTryCompileExec2025495422.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create   -o CMakeFiles/cmTryCompileExec2025495422.dir/CheckFunctionExists.c.o   -c /usr/share/cmake-3.0/Modules/CheckFunctionExists.c
+Linking C executable cmTryCompileExec2025495422
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTryCompileExec2025495422.dir/link.txt --verbose=1
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create    CMakeFiles/cmTryCompileExec2025495422.dir/CheckFunctionExists.c.o  -o cmTryCompileExec2025495422 -rdynamic -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTryCompileExec2025495422.dir/build.make:88: recipe for target 'cmTryCompileExec2025495422' failed
+make[1]: *** [cmTryCompileExec2025495422] Error 1
+make[1]: Leaving directory '/home/pi/L295_ros_node_docker/catkin_ws/build/CMakeFiles/CMakeTmp'
+Makefile:118: recipe for target 'cmTryCompileExec2025495422/fast' failed
+make: *** [cmTryCompileExec2025495422/fast] Error 2
+
+
