@@ -1,8 +1,0 @@
-prefix=/home/pi/L295_ros_node_docker/catkin_ws/devel
-
-Name: l298n
-Description: Description of l298n
-Version: 0.0.0
-Cflags: 
-Libs: -L/home/pi/L295_ros_node_docker/catkin_ws/devel/lib 
-Requires: 
