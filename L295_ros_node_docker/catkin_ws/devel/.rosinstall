@@ -1,0 +1,2 @@
+- setup-file:
+    local-name: /home/pi/gobbit/L295_ros_node_docker/catkin_ws/devel/setup.sh
