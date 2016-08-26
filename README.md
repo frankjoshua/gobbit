@@ -7,4 +7,4 @@ Just clone the repo and run `gobbit/setup/setup.sh` The script will setup Hyprio
 If you have an Android phone the robot can be controled over wifi with an app called [PocketBot](https://play.google.com/store/apps/details?id=com.tesseractmobile.pocketbot).
 
 [You can buy a Gobbit robot from Zagros Robotics](http://www.zagrosrobotics.com/shop/item.aspx?itemid=995)
-![Gobbit Robot](http://www.zagrosrobotics.com/images/Gobbit%20V2.JPG)
+![Gobbit Robot](http://pocketbot.io/wp-content/uploads/2016/08/nathalia_and_pocketbot_gobbit.jpg)
