@@ -1,4 +1,4 @@
-# gobbit
+# Gobbit Robot with ROS and Raspberry Pi 3
 
 Gobbit robot raspberry pi drivers. They work well for other robots also. This is designed to run with [HypriotOS](http://blog.hypriot.com/). It may work with Raspberian or other OSs if you install Docker first. 
 
