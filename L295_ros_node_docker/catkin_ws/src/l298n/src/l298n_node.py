@@ -3,14 +3,17 @@ import rospy
 import L298NHBridge as HBridge
 from geometry_msgs.msg import Twist
 
+def constrain(n, minn, maxn):
+    return max(min(maxn, n), minn)
+
 def callback(msg):
     dx = msg.linear.x
     dr = msg.angular.z
     w = 0.2
     right = 1.0 * dx + dr * w / 2
     left = 1.0 * dx - dr * w / 2
-    HBridge.setMotorLeft(left)
-    HBridge.setMotorRight(right)
+    HBridge.setMotorLeft(constrain(left,-1.0,1.0))
+    HBridge.setMotorRight(constrain(right,-1.0,1.0))
     
 def listener():
 
