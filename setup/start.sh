@@ -2,4 +2,5 @@
 sudo chmod 666 /dev/mem
 sudo chmod 666 /dev/gpiomem
 sudo docker rm -f $(docker ps -a -q) 
-sudo docker run --privileged -d --net=host -p 11311:11311 --cap-add SYS_RAWIO --device /dev/mem -v /home/pirate/gobbit:/home/pi/gobbit frankjoshua/gobbit-l298n-ros-node /home/pi/gobbit/L295_ros_node_docker/run.sh
+sudo docker run -d --net=host -p 11311:11311 frankjoshua/rpi-ros-master roscore
+sudo docker run -d --privileged --net=host --cap-add SYS_RAWIO --device /dev/mem -v /home/pirate/gobbit:/home/pi/gobbit frankjoshua/ros-rpi-adafruit-motor-hat
