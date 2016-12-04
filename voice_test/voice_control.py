@@ -11,9 +11,9 @@ def callback(msg):
     if 'forward' in msg.data:
         twist.linear.x = 0.25
     if 'right' in msg.data:
-        twist.angular.z = -1
+        twist.angular.z = -0.5
     if 'left' in msg.data:
-        twist.angular.z = 1
+        twist.angular.z = 0.5
     if 'back' in msg.data:
         twist.linear.x = -0.25
     if 'stop' in msg.data:
