@@ -9,7 +9,7 @@ def constrain(n, minn, maxn):
 def callback(msg):
     dx = msg.linear.x
     dr = msg.angular.z
-    w = 0.2
+    w = 2.0
     right = 1.0 * dx + dr * w / 2
     left = 1.0 * dx - dr * w / 2
     HBridge.setMotorLeft(constrain(left,-1.0,1.0))
