@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import rospy
 from std_msgs.msg import Float32
+from std_msgs.msg import Int32
 import time
 import atexit
 
@@ -57,18 +58,26 @@ def listener():
     pubs = []
     for i in range(1, 9):
         pubs.append(rospy.Publisher('light' + str(i), Float32, queue_size=10))
+    linePub = rospy.Publisher('line', Int32, queue_size=10)
     rospy.init_node('light_sensor_node', anonymous=True)
 
     # spin() simply keeps python from exiting until this node is stopped
     print "Line detection active."
 
-    r = rospy.Rate(100) # 100hz
+    r = rospy.Rate(100) # 100hz  
+    lowValue = 0
+    highValue = 0
     while not rospy.is_shutdown():
-        highValue = 0
-        lowValue = 0
+        lineValue = 0
+        totalValue = 0
         for i in range(0, 8):
+            global lineValue, lowValue, highValue
             value, highValue, lowValue = readSensor(pins[i], highValue, lowValue)
             pubs[i].publish(value)
+            lineValue += i * 1000 * value
+            totalValue += value
+        #Publish line value
+        linePub.publish(int(lineValue / totalValue)) 
         r.sleep()
 
 if __name__ == '__main__':
