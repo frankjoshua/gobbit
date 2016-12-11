@@ -24,7 +24,7 @@ def listener():
     # run simultaneously.
     rospy.init_node('l298n', anonymous=True)
 
-    rospy.Subscriber("/pocketbot/cmd_vel", Twist, callback)
+    rospy.Subscriber("/cmd_vel", Twist, callback)
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
