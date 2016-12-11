@@ -6,6 +6,7 @@ RUN sudo apt-get update -y
 #install RPi.GPIO
 RUN sudo apt-get install -y python-pip
 RUN sudo pip install RPi.GPIO
+RUN sudo pip install mediantracker
 
 EXPOSE 11311
 # setup entrypoint

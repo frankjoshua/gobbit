@@ -4,6 +4,7 @@ from std_msgs.msg import Float32
 from std_msgs.msg import Int32
 import time
 import atexit
+from collections import deque
 
 try:
     import RPi.GPIO as GPIO
@@ -17,6 +18,13 @@ pins = [23, 8, 7, 12, 20, 16, 21, 26]
 #set up GPIO using BCM numbering
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.OUT)
+
+#filters for the input values
+len = 4
+latestValues = [deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len)]
+for i in range(0,8):
+    for j in range(0,len):
+        latestValues[i].append(0) #int all to zeros
 
 def cleanup():
     GPIO.cleanup()
@@ -49,11 +57,17 @@ def readSensor(pin, highValue, lowValue):
     #Turn off LED
     GPIO.output(ledPin, GPIO.LOW)
     value = (done - start) * 1000000
-    if value > highValue:
+    if value * 0.7 > highValue:
         highValue = value
-    if value > 0.0000001 and value < lowValue:
+    if value > 0.0000001 and value * 1.3 < lowValue:
         lowValue = value
-    return (value - lowValue) / (highValue - lowValue), highValue, lowValue
+
+    #watch for divide by 0
+    denominator = highValue - lowValue    
+    if(denominator == 0):
+        denominator = 1
+        
+    return (value - lowValue) / denominator, highValue, lowValue
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same
@@ -72,7 +86,7 @@ def listener():
     print "Line detection active."
 
     r = rospy.Rate(1000) # 1khz  
-    lowValue = 0
+    lowValue = 1000
     highValue = 0
     while not rospy.is_shutdown():
         lineValue = 0
@@ -81,14 +95,28 @@ def listener():
         for i in range(0, 8):
             global lineValue, lowValue, highValue, lineValues
             value, highValue, lowValue = readSensor(pins[i], highValue, lowValue)
-            pubs[i].publish(value)
-            lineValue += i * 1000 * value
-            totalValue += value
+            #apply median filter
+            latestValues[i].append(value)
+            sortedList = sorted(latestValues[i])
+            filteredValue = (sortedList[len / 2] + sortedList[len / 2 + 1]) / 2            
+            lineValue += i * 1000 * filteredValue
+            totalValue += filteredValue
+            #save original values
             lineValues.append(value)
-        #Publish line value
+            #publish filtered value
+            pubs[i].publish(filteredValue)
+
+        #publish line value
         linePub.publish(int(lineValue / totalValue))
-        #intersectionPub.publish(lineValues[0])
-        print str(lineValues[0])
+        #check for intersection
+        threshHold = 0.4
+        if(lineValues[2] > threshHold and lineValues[3] > threshHold and lineValues[4] > threshHold and lineValues[5] > threshHold):
+            #line found send a 1
+            intersectionPub.publish(1)
+        else:
+            intersectionPub.publish(0)
+
+        print str(highValue) + " " + str(lineValues[3])  + " " + str(lowValue)
         r.sleep()
 
 if __name__ == '__main__':

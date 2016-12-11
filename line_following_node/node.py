@@ -5,6 +5,7 @@ from geometry_msgs.msg import Twist
 import time
 import atexit
 
+state = 0
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
 
 def cleanup():
@@ -12,18 +13,24 @@ def cleanup():
 
 atexit.register(cleanup)
 
-def callback(msg):
-#    print str(msg)
+def line(msg):
+    global state
+    #create new Twist message
     cmd = Twist()
-    cmd.linear.x = 0.2
-#    print(str(msg.data - 3500))
-    error = msg.data - 3500
-    if(abs(error) > 150):
-        cmd.angular.z = error * 0.000075
-    print(str(cmd.angular.z))
-#    print str(cmd)
+    #react based on intersection
+    if(state == 0):
+        cmd.linear.x = 0.3
+        error = msg.data - 3500
+        if(abs(error) > 150):
+            cmd.angular.z = error * 0.000075
+    #Publish the message
     pub.publish(cmd) 
 
+def intersection(msg):
+    global state
+    #update state
+    state = msg.data
+    print(str(msg.data))
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same
@@ -32,7 +39,8 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('line_follower', anonymous=True)
-    rospy.Subscriber('/line', Int32, callback)
+    rospy.Subscriber('/line', Int32, line)
+    rospy.Subscriber('/intersection', Int32, intersection)
 
     print "Line follower active..."
 
