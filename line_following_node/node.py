@@ -13,16 +13,22 @@ def cleanup():
 
 atexit.register(cleanup)
 
+lastError = 0
 def line(msg):
     global state
     #create new Twist message
     cmd = Twist()
     #react based on intersection
     if(state == 0):
-        cmd.linear.x = 0.3
+        global lastError
+        cmd.linear.x = 0.2
         error = msg.data - 3500
-        if(abs(error) > 150):
-            cmd.angular.z = error * 0.000075
+        if(abs(error) > 50):
+            print(str(lastError))
+            kp = 0.000035
+            kd = 0.000035
+            cmd.angular.z = kp * error + kd * (error - lastError)
+        lastError = error
     #Publish the message
     pub.publish(cmd) 
 
@@ -30,7 +36,7 @@ def intersection(msg):
     global state
     #update state
     state = msg.data
-    print(str(msg.data))
+#    print(str(msg.data))
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same
