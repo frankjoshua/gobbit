@@ -6,7 +6,7 @@ import time
 import atexit
 
 state = 0
-pub = rospy.Publisher('/cmd_vel', Twist, queue_size=10)
+pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
 def cleanup():
     pub.publish(Twist())
@@ -21,13 +21,14 @@ def line(msg):
     #react based on intersection
     if(state == 0):
         global lastError
-        cmd.linear.x = 0.2
+        cmd.linear.x = 0.75
         error = msg.data - 3500
-        if(abs(error) > 50):
-            print(str(lastError))
-            kp = 0.000035
-            kd = 0.000035
+        if(abs(error) > 1):
+            #print(str(lastError))
+            kp = (abs(error) / 10) * 0.00000115
+            kd = max(1000, abs(error)) * 0.000000000
             cmd.angular.z = kp * error + kd * (error - lastError)
+            cmd.linear.x = max(cmd.linear.x - abs(cmd.angular.z), 0.05)
         lastError = error
     #Publish the message
     pub.publish(cmd) 
@@ -35,7 +36,7 @@ def line(msg):
 def intersection(msg):
     global state
     #update state
-    state = msg.data
+#    state = msg.data
 #    print(str(msg.data))
 
 def listener():

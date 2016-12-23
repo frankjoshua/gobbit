@@ -23,9 +23,9 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.OUT)
 
 #filters for the input values
-len = 15
-latestValues = [deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len)]
-for i in range(0,8):
+len = 3
+latestValues = [deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len)]
+for i in range(0,9):
     for j in range(0,len):
         latestValues[i].append(0) #int all to zeros
 
@@ -35,7 +35,7 @@ def cleanup():
 atexit.register(cleanup)
 
 def readSensor():
-    timeOut = 0.000001 * 2500
+    timeOut = 0.000001 * 3000
     values = [timeOut, timeOut, timeOut, timeOut, timeOut, timeOut, timeOut, timeOut]
     set = [False,False,False,False,False,False,False,False]
     #Turn on LED
@@ -62,27 +62,30 @@ def readSensor():
     #Turn off LED
     GPIO.output(ledPin, GPIO.LOW)
     #Convert values to a percent of low to high values
+    highValue = 0
+    lowValue = 100000000
     for i in range(0, 8):
-        values[i] = values[i] * 1000000
-        #Adjust high and lows to auto calibrate
-        if values[i] < timeOut * 1000000 and values[i] > highValues[i]:
-            highValues[i] = values[i]
-            #print(highValues)
-        if values[i] > 0 and values[i] < lowValues[i]:
-            lowValues[i] = values[i]
-        #watch for divide by 0
-        denominator = highValues[i] - lowValues[i]    
-        if(denominator == 0):
-            denominator = 1
         #apply median filter
-        if(values[i] < timeOut * 1000000):
-            latestValues[i].append(values[i])
+        latestValues[i].append(values[i] * 1000000)
         sortedList = sorted(latestValues[i])
-        #values[i] = (sortedList[len / 2] + sortedList[len / 2 + 1]) / 2            
-        print(sortedList)
         values[i] = sortedList[len / 2]
-        values[i] = (values[i] - lowValues[i]) / denominator
-        
+        #values[i] = values[i] * 1000000
+        #Adjust high and lows to auto calibrate
+        if values[i] > highValue:
+            highValue = values[i]
+        if values[i] < lowValue:
+            lowValue = values[i]
+    #watch for divide by 0
+    highValue = 3000
+    #lowValue = 0
+    denominator = highValue - lowValue    
+    if(denominator == 0):
+        denominator = 1
+    #for i in range(0, 8):
+    #    values[i] = (values[i] - lowValue) / denominator
+    print(str(lowValue))
+    print(values)
+    print(str(highValue))        
     return values
 
 def detectIntersection(values, first, last):
@@ -115,24 +118,33 @@ def listener():
     # spin() simply keeps python from exiting until this node is stopped
     print "Line detection active."
 
-    r = rospy.Rate(100) # 200hz  
+    r = rospy.Rate(150) # 150hz  
     while not rospy.is_shutdown():
         lineValue = 0
         totalValue = 0    
         lineValues = readSensor()
-        #lineValue += i * 1000 * filteredValue
-        #totalValue += filteredValue
-        #save original values
-        #lineValues.append(filteredValue)
+        #print(lineValues)
+        onLine = False
         #publish filtered value
         for i in range(0, 8):
-            lineValue += i * 1000 * lineValues[i]
-            totalValue += lineValues[i]
+            if(lineValues[i] > 1000):
+                onLine = True
+            if(lineValues[i] > 500):
+                lineValue += i * 1000 * lineValues[i]
+                totalValue += lineValues[i]
             pubs[i].publish(lineValues[i])
 
         #publish line value
         if(totalValue > 0):
-            linePub.publish(int(lineValue / totalValue))
+            if(onLine == False):
+                if(latestValues[8][len - 1] > 3500):
+                    linePub.publish(7000)
+                else:
+                    linePub.publish(0)
+            else:
+                latestValues[8].append(int(lineValue / totalValue))
+                sortedList = sorted(latestValues[8])
+                linePub.publish(sortedList[len / 2])
         #check for intersection
         threshHold = 0.2
         #if(lineValues[2] > threshHold and lineValues[3] > threshHold and lineValues[4] > threshHold and lineValues[5] > threshHold):
