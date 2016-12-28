@@ -21,14 +21,14 @@ def line(msg):
     #react based on intersection
     if(state == 0):
         global lastError
-        cmd.linear.x = 0.75
+        cmd.linear.x = 0.25
         error = msg.data - 3500
         if(abs(error) > 1):
             #print(str(lastError))
-            kp = (abs(error) / 10) * 0.00000115
-            kd = max(1000, abs(error)) * 0.000000000
+            kp = 0.000075
+            kd = 0.00000000
             cmd.angular.z = kp * error + kd * (error - lastError)
-            cmd.linear.x = max(cmd.linear.x - abs(cmd.angular.z), 0.05)
+            cmd.linear.x = max(cmd.linear.x - abs(cmd.angular.z), 0.01)
         lastError = error
     #Publish the message
     pub.publish(cmd) 
@@ -46,8 +46,8 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('line_follower', anonymous=True)
-    rospy.Subscriber('/line', Int32, line)
-    rospy.Subscriber('/intersection', Int32, intersection)
+    rospy.Subscriber('/line/filtered', Int32, line)
+    rospy.Subscriber('/line/intersection', Int32, intersection)
 
     print "Line follower active..."
 

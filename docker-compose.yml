@@ -1,0 +1,41 @@
+version: '2'
+services:
+  ros-master:
+    image: frankjoshua/rpi-ros-master
+    ports:
+      - "11311:11311"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+  ros-qtr:
+    image: frankjoshua/ros-rpi-qtr-8rc
+    cap_add: 
+      - SYS_RAWIO
+    devices: 
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+  ros-l298:
+    image: frankjoshua/gobbit-l298n-ros-node
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - "/dev/mem:/dev/mem"
+    volumes:
+      - /home/pirate/gobbit:/home/pi/gobbit
+    command: /home/pi/gobbit/L295_ros_node_docker/run.sh
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+  web-server:
+    image: lispmeister/rpi-nginx
+    network_mode: "host"
+    restart: always
+    volumes:
+      - /home/pirate/gobbit/blockly:/usr/share/nginx/www

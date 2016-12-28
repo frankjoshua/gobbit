@@ -24,9 +24,10 @@ GPIO.setup(18, GPIO.OUT)
 
 #filters for the input values
 len = 3
-latestValues = [deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len)]
+lineFilterLength = 9
+latestValues = [deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=len), deque(maxlen=lineFilterLength)]
 for i in range(0,9):
-    for j in range(0,len):
+    for j in range(0,max(len,lineFilterLength)):
         latestValues[i].append(0) #int all to zeros
 
 def cleanup():
@@ -83,9 +84,9 @@ def readSensor():
         denominator = 1
     #for i in range(0, 8):
     #    values[i] = (values[i] - lowValue) / denominator
-    print(str(lowValue))
+    #print(str(lowValue))
     print(values)
-    print(str(highValue))        
+    #print(str(highValue))        
     return values
 
 def detectIntersection(values, first, last):
@@ -110,9 +111,10 @@ def listener():
     # run simultaneously.
     pubs = []
     for i in range(1, 9):
-        pubs.append(rospy.Publisher('light' + str(i), Float32, queue_size=1))
-    linePub = rospy.Publisher('line', Int32, queue_size=1)
-    intersectionPub = rospy.Publisher('intersection', Int32, queue_size=1)
+        pubs.append(rospy.Publisher('line/light' + str(i), Float32, queue_size=1))
+    linePub = rospy.Publisher('line/filtered', Int32, queue_size=1)
+    filteredLinePub = rospy.Publisher('line/raw', Int32, queue_size=1)
+    intersectionPub = rospy.Publisher('line/intersection', Int32, queue_size=1)
     rospy.init_node('light_sensor_node', anonymous=True)
 
     # spin() simply keeps python from exiting until this node is stopped
@@ -127,9 +129,9 @@ def listener():
         onLine = False
         #publish filtered value
         for i in range(0, 8):
-            if(lineValues[i] > 1000):
-                onLine = True
             if(lineValues[i] > 500):
+                onLine = True
+            if(lineValues[i] > 300):
                 lineValue += i * 1000 * lineValues[i]
                 totalValue += lineValues[i]
             pubs[i].publish(lineValues[i])
@@ -143,8 +145,12 @@ def listener():
                     linePub.publish(0)
             else:
                 latestValues[8].append(int(lineValue / totalValue))
+                filteredLinePub.publish(latestValues[8][2])
+                #print(latestValues[8])
                 sortedList = sorted(latestValues[8])
-                linePub.publish(sortedList[len / 2])
+                #print(sortedList)
+                linePub.publish(sortedList[lineFilterLength / 2])
+                #print(sortedList[lineFilterLength / 2])
         #check for intersection
         threshHold = 0.2
         #if(lineValues[2] > threshHold and lineValues[3] > threshHold and lineValues[4] > threshHold and lineValues[5] > threshHold):
