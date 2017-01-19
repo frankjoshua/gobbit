@@ -18,8 +18,5 @@ RUN sudo apt-get -y clean \
 	&& sudo apt-get -y purge \
 	&& sudo rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-EXPOSE 11311
-# setup entrypoint
-ENV ROS_DISTRO indigo
-COPY ./ros_entrypoint.sh /
-ENTRYPOINT ["/ros_entrypoint.sh"]
+CMD ["python", "/node.py"]
+COPY ./node.py /

@@ -23,10 +23,10 @@ def line(msg):
         global lastError
         cmd.linear.x = 0.25
         error = msg.data - 3500
-        if(abs(error) > 1):
+        if(abs(error) > 400):
             #print(str(lastError))
-            kp = 0.000075
-            kd = 0.00000000
+            kp = 0.000035
+            kd = 0.000015
             cmd.angular.z = kp * error + kd * (error - lastError)
             cmd.linear.x = max(cmd.linear.x - abs(cmd.angular.z), 0.01)
         lastError = error
@@ -46,7 +46,7 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('line_follower', anonymous=True)
-    rospy.Subscriber('/line/filtered', Int32, line)
+    rospy.Subscriber('/line/filtered', Int32, line, queue_size=1)
     rospy.Subscriber('/line/intersection', Int32, intersection)
 
     print "Line follower active..."

@@ -2,6 +2,7 @@
 <head>
   <script src="blockly_compressed.js"></script>
   <script src="blocks_compressed.js"></script>
+  <script src="python_compressed.js"></script>
   <script src="msg/js/en.js"></script>
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
   <category name="Logic" colour="#5C81A6">
@@ -363,10 +364,18 @@
 </xml>
 </head>
 <body>
-  <div id="blocklyDiv" style="height: 864px; width: 1536px;"></div>
+  <div style="width: 100%; overflow: hidden;">
+    <div id="blocklyDiv" style="height: 864px; width: 750px; float: left;"></div>
+    <div id="textarea" style="margin-left: 750px">Code Here</div>
+  </div>
   <script>
     var workspace = Blockly.inject('blocklyDiv',
       {toolbox: document.getElementById('toolbox')});
+    function myUpdateFunction(event) {
+      var code = Blockly.Python.workspaceToCode(workspace);
+      document.getElementById('textarea').innerHTML = '<pre>' + code + '</pre>';
+    }
+    workspace.addChangeListener(myUpdateFunction);
   </script>
 </body>
 </html>
