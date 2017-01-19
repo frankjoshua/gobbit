@@ -2,7 +2,7 @@
 <head>
   <script src="blockly_compressed.js"></script>
   <script src="blocks_compressed.js"></script>
-  <script src="python_compressed.js"></script>
+  <script src="Python_compressed.js"></script>
   <script src="msg/js/en.js"></script>
 <xml xmlns="http://www.w3.org/1999/xhtml" id="toolbox" style="display: none;">
   <category name="Logic" colour="#5C81A6">
@@ -362,20 +362,32 @@
   <category name="Variables" colour="#A65C81" custom="VARIABLE"></category>
   <category name="Functions" colour="#9A5CA6" custom="PROCEDURE"></category>
 </xml>
+<script>
+function send_code_to_server() {
+var http = new XMLHttpRequest();
+
+var url = "update_code.php";
+var params = "code="+Blockly.Python.workspaceToCode(workspace);
+http.open("POST", url, true);
+
+//Send the proper header information along with the request
+http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+http.onreadystatechange = function() {//Call a function when the state changes.
+	if(http.readyState == 4 && http.status == 200) {
+		//alert(http.responseText);
+	}
+}
+http.send(params);
+}
+</script>
 </head>
 <body>
-  <div style="width: 100%; overflow: hidden;">
-    <div id="blocklyDiv" style="height: 864px; width: 750px; float: left;"></div>
-    <div id="textarea" style="margin-left: 750px">Code Here</div>
-  </div>
+  <button type="button" onclick="send_code_to_server()">update robot code</button>
+  <div id="blocklyDiv" style="height: 864px; width: 1536px;"></div>
   <script>
     var workspace = Blockly.inject('blocklyDiv',
       {toolbox: document.getElementById('toolbox')});
-    function myUpdateFunction(event) {
-      var code = Blockly.Python.workspaceToCode(workspace);
-      document.getElementById('textarea').innerHTML = '<pre>' + code + '</pre>';
-    }
-    workspace.addChangeListener(myUpdateFunction);
   </script>
 </body>
 </html>
