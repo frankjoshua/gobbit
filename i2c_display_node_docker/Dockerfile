@@ -20,3 +20,6 @@ RUN sudo apt-get -y clean \
 
 CMD ["python", "/node.py"]
 COPY ./node.py /
+
+#Run as root to get permission for /dev/i2c-1
+USER root
