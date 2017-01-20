@@ -8,6 +8,7 @@ services:
       - ros.env
     network_mode: "host"
     restart: always
+
   ros-qtr:
     image: frankjoshua/ros-rpi-qtr-8rc
     cap_add: 
@@ -19,6 +20,19 @@ services:
       - ros.env
     network_mode: "host"
     restart: always
+
+  ros-oled-display:
+    image: frankjoshua/ros-rpi-oled-display
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - "/dev/mem:/dev/mem"
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+
   ros-l298:
     image: frankjoshua/gobbit-l298n-ros-node
     cap_add:
@@ -33,9 +47,18 @@ services:
       - ros.env
     network_mode: "host"
     restart: always
+
   web-server:
     image: lispmeister/rpi-nginx
     network_mode: "host"
     restart: always
     volumes:
       - /home/pirate/gobbit/blockly:/usr/share/nginx/www
+
+  ros-line-follower:
+    image: frankjoshua/ros-rpi-line-follower
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+
