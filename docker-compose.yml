@@ -49,7 +49,7 @@ services:
     restart: always
 
   web-server:
-    image: lispmeister/rpi-nginx
+    image: schoeffm/rpi-nginx-php5
     network_mode: "host"
     restart: always
     volumes:
@@ -61,4 +61,13 @@ services:
       - ros.env
     network_mode: "host"
     restart: always
+    
+  ros-line-follower:
+    image: frankjoshua/user_code_node
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+    volumes:
+      - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
 
