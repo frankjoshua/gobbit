@@ -7,7 +7,7 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    restart: always
+    restart: unless-stopped
 
   ros-qtr:
     image: frankjoshua/ros-rpi-qtr-8rc
@@ -19,7 +19,7 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    restart: always
+    restart: unless-stopped
 
   ros-oled-display:
     image: frankjoshua/ros-rpi-oled-display
@@ -27,11 +27,13 @@ services:
       - SYS_RAWIO
     devices:
       - "/dev/mem:/dev/mem"
+      - "/lib/modules:/lib/modules"
+      - "/dev/i2c-1:/dev/i2c-1"
     privileged: true
     env_file:
       - ros.env
     network_mode: "host"
-    restart: always
+    restart: unless-stopped
 
   ros-l298:
     image: frankjoshua/gobbit-l298n-ros-node
@@ -46,12 +48,12 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    restart: always
+    restart: unless-stopped
 
   web-server:
     image: schoeffm/rpi-nginx-php5
     network_mode: "host"
-    restart: always
+    restart: unless-stopped
     volumes:
       - /home/pirate/gobbit/blockly:/usr/share/nginx/www
 
@@ -60,6 +62,7 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
+<<<<<<< HEAD
     restart: always
     
   ros-line-follower:
@@ -70,4 +73,7 @@ services:
     restart: always
     volumes:
       - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
+=======
+    restart: unless-stopped
+>>>>>>> refs/remotes/frankjoshua/master
 

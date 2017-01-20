@@ -3,6 +3,7 @@ import rospy
 import time
 import atexit
 from geometry_msgs.msg import Twist
+from std_msgs.msg import Int32
 
 import Adafruit_SSD1306
 
@@ -28,13 +29,39 @@ image = Image.new('1', (width, height))
 draw = ImageDraw.Draw(image)
 # Load default font.
 font = ImageFont.load_default()
+dx = 0
+dr = 0
+line = 0
 
-def callback(msg):
+def translate(value, leftMin, leftMax, rightMin, rightMax):
+    # Figure out how 'wide' each range is
+    leftSpan = leftMax - leftMin
+    rightSpan = rightMax - rightMin
+
+    # Convert the left range into a 0-1 range (float)
+    valueScaled = float(value - leftMin) / float(leftSpan)
+
+    # Convert the 0-1 range into a value in the right range.
+    return rightMin + (valueScaled * rightSpan)
+
+def cmd_callback(msg):
+    global dx, dr
     dx = msg.linear.x
     dr = msg.angular.z
+
+def line_callback(msg):
+    global line
+    line = msg.data
+    updateDisplay()
+
+def updateDisplay():
     # Draw a black filled box to clear the image.
     draw.rectangle((0,0,width,height), outline=0, fill=0)
-    draw.text((0, 10), str(dx) + "  " + str(dr), font=font, fill=255)
+    draw.text((0, 10), "X: " + str(dx) + " Z: " + str(dr), font=font, fill=255)
+    draw.text((0, 0), "Line: " + str(line), font=font, fill=255)
+    linePos = translate(line, 0, 7000, 0, 128);
+    draw.text((linePos, 20), "|", font=font, fill=255)
+    disp.image(image)
     # Display image.
     disp.image(image)
     disp.display()
@@ -46,7 +73,8 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('olde_node', anonymous=True)
-    rospy.Subscriber("/cmd_vel", Twist, callback, queue_size = 1)
+    rospy.Subscriber("/cmd_vel", Twist, cmd_callback, queue_size = 1)
+    rospy.Subscriber("/line/filtered", Int32, line_callback, queue_size = 1)
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
