@@ -13,4 +13,5 @@ Just clone the repo and run `cd gobbit && ./start.sh` This will download Docker 
 If you have an Android phone the robot can be controled over wifi with an app called [PocketBot](https://play.google.com/store/apps/details?id=com.tesseractmobile.pocketbot).
 
 [You can buy a Gobbit robot from Zagros Robotics](http://www.zagrosrobotics.com/shop/item.aspx?itemid=995)
+<br>
 <img src="http://pocketbot.io/wp-content/uploads/2016/08/nathalia_and_pocketbot_gobbit-1.jpg" alt="Gobbit Robot" width="517" height="385"/>
