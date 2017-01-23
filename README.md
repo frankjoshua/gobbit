@@ -1,8 +1,14 @@
-# Gobbit Robot with ROS and Raspberry Pi 3
+#Gobbit Robot with ROS and Raspberry Pi 3
+
+##Quick Start
+1. Install [HypriotOS](http://blog.hypriot.com/) onto a 16GB or larger micro SD<br>
+2. git clone git@github.com:frankjoshua/gobbit.git<br>
+3. ./gobbit/start.sh<br>
+4. Wait.... The PI will download many gigs of data it's going to take a while
 
 Gobbit robot raspberry pi drivers. They work well for other robots also. This is designed to run with [HypriotOS](http://blog.hypriot.com/). It may work with Raspberian or other OSs if you install Docker first. 
 
-Just clone the repo and run `cd gobbit && docker-compose up -d` This will download Docker images and run them. They should also auto restart after rebooting. After a minute a ROS master should be running at http://pirate@black-pearl.local:11311
+Just clone the repo and run `cd gobbit && ./start.sh` This will download Docker images and run them. They should also auto restart after rebooting. After a minute a ROS master should be running at http://pirate@black-pearl.local:11311
 
 If you have an Android phone the robot can be controled over wifi with an app called [PocketBot](https://play.google.com/store/apps/details?id=com.tesseractmobile.pocketbot).
 
