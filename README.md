@@ -2,7 +2,7 @@
 
 ##Quick Start
 1. Install [HypriotOS](http://blog.hypriot.com/) onto a 16GB or larger micro SD<br>
-2. git clone git@github.com:frankjoshua/gobbit.git<br>
+2. git clone https://github.com/frankjoshua/gobbit.git<br>
 3. ./gobbit/start.sh<br>
 4. Wait.... The PI will download many gigs of data it's going to take a while
 
