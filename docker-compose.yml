@@ -35,15 +35,16 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-l298:
-    image: frankjoshua/gobbit-l298n-ros-node
+  ros-motor-hat:
+    image: frankjoshua/ros-rpi-adafruit-motor-hat
     cap_add:
       - SYS_RAWIO
     devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+      - "/lib/modules:/lib/modules"
       - "/dev/mem:/dev/mem"
     volumes:
       - /home/pirate/gobbit:/home/pi/gobbit
-    command: /home/pi/gobbit/L295_ros_node_docker/run.sh
     privileged: true
     env_file:
       - ros.env
