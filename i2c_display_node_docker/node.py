@@ -58,9 +58,9 @@ def updateDisplay():
     # Draw a black filled box to clear the image.
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((0, 10), "X: " + str(dx) + " Z: " + str(dr), font=font, fill=255)
-    draw.text((0, 0), "Line: " + str(line), font=font, fill=255)
-    linePos = translate(line, 0, 7000, 0, 128);
-    draw.text((linePos, 20), "|", font=font, fill=255)
+    draw.text((0, 20), "Line: " + str(line), font=font, fill=255)
+    linePos = translate(line, 7000, 0, 0, 128);
+    draw.text((linePos, 0), "-", font=font, fill=255)
     disp.image(image)
     # Display image.
     disp.image(image)
