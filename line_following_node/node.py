@@ -5,6 +5,7 @@ from geometry_msgs.msg import Twist
 import time
 import atexit
 
+#Start in a stopped state
 state = 0
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
@@ -16,10 +17,10 @@ atexit.register(cleanup)
 lastError = 0
 def line(msg):
     global state
-    #create new Twist message
-    cmd = Twist()
     #react based on intersection
-    if(state == 0):
+    if(state == 1):
+        #create new Twist message
+        cmd = Twist()
         global lastError
         cmd.linear.x = 0.25
         error = msg.data - 3500
@@ -30,13 +31,13 @@ def line(msg):
             cmd.angular.z = kp * error + kd * (error - lastError)
             cmd.linear.x = max(cmd.linear.x - abs(cmd.angular.z), 0.01)
         lastError = error
-    #Publish the message
-    pub.publish(cmd) 
+        #Publish the message
+        pub.publish(cmd) 
 
 def intersection(msg):
     global state
     #update state
-#    state = msg.data
+    state = msg.data
 #    print(str(msg.data))
 
 def listener():
