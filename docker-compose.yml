@@ -109,3 +109,12 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  ui:
+    image: portainer/portainer:arm
+    restart: unless-stopped
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    expose:
+      - 9000
+    ports:
+      - 9000:9000
