@@ -11,6 +11,8 @@
 <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
 <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
 <script type="text/javascript" src="http://cdn.robotwebtools.org/keyboardteleopjs/current/keyboardteleop.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+<script type="text/javascript" src="http://cdn.robotwebtools.org/mjpegcanvasjs/current/mjpegcanvas.min.js"></script>
 
 <script type="text/javascript">
   /**
@@ -19,7 +21,7 @@
   function init() {
     // Connecting to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://10.10.10.107:9090'
+      url : 'ws://gobbit.local:9090'
     });
 
     // Initialize the teleop.
@@ -42,6 +44,15 @@
       }
     });
 
+    // Create the main viewer.
+    var viewer = new MJPEGCANVAS.Viewer({
+      divID : 'mjpeg',
+      host : 'gobbit.local',
+      width : 640,
+      height : 480,
+      topic : '/image_raw'
+    });
+
     // Set the initial speed .
     $('#speed-label').html('Speed: ' + ($('#speed-slider').slider('value')) + '%');
     teleop.scale = ($('#speed-slider').slider('value') / 100.0);
@@ -50,6 +61,7 @@
 </head>
 
 <body onload="init()">
+  <div id="mjpeg"></div>
   <div id="speed-label"></div>
   <div id="speed-slider"></div>
 </body>
