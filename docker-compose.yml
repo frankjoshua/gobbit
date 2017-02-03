@@ -69,13 +69,34 @@ services:
 
   web-server:
     image: schoeffm/rpi-nginx-php5
+#    ports:
+#      - "80:80"
     network_mode: "host"
     restart: unless-stopped
     volumes:
       - /home/pirate/gobbit/blockly:/usr/share/nginx/www
 
+  ros-rosbridge-server:
+    image: frankjoshua/ros-rpi-rosbridge-server
+    ports:
+      - "9090:9090"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
   ros-line-follower:
     image: frankjoshua/ros-rpi-line-follower
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-usb-cam:
+    image: frankjoshua/ros-rpi-usb-cam
+    devices:
+      - "/dev/video0:/dev/video0"
+    privileged: true
     env_file:
       - ros.env
     network_mode: "host"
