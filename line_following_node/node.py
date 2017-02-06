@@ -7,6 +7,7 @@ import atexit
 
 #Start in a stopped state
 state = 0
+inBounds = False
 pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
 
 def cleanup():
@@ -16,9 +17,9 @@ atexit.register(cleanup)
 
 lastError = 0
 def line(msg):
-    global state
+    global state, inBounds
     #react based on intersection
-    if(state == 1):
+    if(inBounds):
         #create new Twist message
         cmd = Twist()
         global lastError
@@ -38,7 +39,13 @@ def intersection(msg):
     global state
     #update state
     state = msg.data
-#    print(str(msg.data))
+
+def bounds(msg):
+    global inBounds
+    if(msg.data == 1):
+        inBounds = False
+    else:
+        inBounds = True
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same
@@ -49,6 +56,7 @@ def listener():
     rospy.init_node('line_follower', anonymous=True)
     rospy.Subscriber('/line/filtered', Int32, line, queue_size=1)
     rospy.Subscriber('/line/intersection', Int32, intersection)
+    rospy.Subscriber('/line/bounds', Int32, bounds)
 
     print "Line follower active..."
 

@@ -56,8 +56,10 @@ def controlCallback(msg):
     driveMotors(msg)
 
 def callback(msg):
+    global lastControl
+    timeSinceLastManualControl = time.time() - lastControl
     #Make sure 3 seconds have passed since last manual control attempt
-    if(time.time() - lastControl > 3000):
+    if(timeSinceLastManualControl > 3):
         driveMotors(msg)
 
 
@@ -75,7 +77,7 @@ def listener():
     # anonymous=True flag means that rospy will choose a unique
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
-    rospy.init_node('adafruit_motor_hat_node', anonymous=True)
+    rospy.init_node('adafruit_motor_hat_node', anonymous=False)
     rospy.Subscriber("/cmd_vel", Twist, callback, queue_size=1)
     rospy.Subscriber("/pocketbot/cmd_vel", Twist, controlCallback, queue_size=1)
 
