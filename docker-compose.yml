@@ -9,12 +9,26 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-qtr:
-    image: frankjoshua/ros-rpi-qtr-8rc
-    cap_add: 
+#  ros-qtr:
+#    image: frankjoshua/ros-rpi-qtr-8rc
+#    cap_add: 
+#      - SYS_RAWIO
+#    devices: 
+#      - "/dev/mem:/dev/mem"
+#    privileged: true
+#    env_file:
+#      - ros.env
+#    network_mode: "host"
+#    restart: unless-stopped
+
+  ros-linedog:
+    image: frankjoshua/ros-rpi-linedog-node
+    cap_add:
       - SYS_RAWIO
-    devices: 
+    devices:
       - "/dev/mem:/dev/mem"
+      - "/lib/modules:/lib/modules"
+      - "/dev/i2c-1:/dev/i2c-1"
     privileged: true
     env_file:
       - ros.env
