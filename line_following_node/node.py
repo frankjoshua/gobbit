@@ -41,10 +41,11 @@ def intersection(msg):
     state = msg.data
 
 def bounds(msg):
-    global inBounds
     if(msg.data == 1):
+        global inBounds
         inBounds = False
     else:
+        global inBounds
         inBounds = True
 
 def listener():
