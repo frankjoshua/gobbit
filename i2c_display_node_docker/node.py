@@ -67,6 +67,7 @@ def updateDisplay():
     disp.display()
 
 def listener():
+    updateDisplay()
     # In ROS, nodes are uniquely named. If two nodes with the same
     # node are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique

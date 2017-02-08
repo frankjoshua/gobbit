@@ -19,9 +19,10 @@
    * Setup all GUI elements when the page is loaded.
    */
   function init() {
+    var rosUrl = window.location.hostname
     // Connecting to ROS.
     var ros = new ROSLIB.Ros({
-      url : 'ws://gobbit.local:9090'
+      url : 'ws://' + rosUrl  + ':9090'
     });
 
     // Initialize the teleop.
@@ -47,7 +48,7 @@
     // Create the main viewer.
     var viewer = new MJPEGCANVAS.Viewer({
       divID : 'mjpeg',
-      host : 'gobbit.local',
+      host : rosUrl,
       width : 640,
       height : 480,
       topic : '/image_raw'
