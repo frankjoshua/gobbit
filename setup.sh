@@ -11,13 +11,14 @@ cd "${0%/*}"
 #Setup i2c
 grep -q i2c-dev /etc/modules
 if [ $? -eq 0 ]; then
-	echo "Don't run this twice"
+	echo "Don't run this twice. Run \"sudo ./start.sh -d\""
 	exit 1
 fi
 sudo echo i2c-bcm2708 >> /etc/modules
 sudo echo i2c-dev >> /etc/modules
 sudo echo dtparam=i2c1=on >> /boot/config.txt
 sudo echo dtparam=i2c_arm=on >> /boot/config.txt
+sudo echo dtparam=i2c_arm_baudrate=100010 >> /boot/config.txt
 
 #run start.sh once so docker image will download
 sudo ./start.sh -d
