@@ -46,12 +46,20 @@
     });
 
     // Create the main viewer.
-    var viewer = new MJPEGCANVAS.Viewer({
+/*    var viewer = new MJPEGCANVAS.Viewer({
       divID : 'mjpeg',
       host : rosUrl,
       width : 640,
       height : 480,
       topic : '/image_raw'
+    }); */
+    var viewer = new MJPEGCANVAS.MultiStreamViewer({
+      divID : 'mjpeg',
+      host : rosUrl,
+      width : 640,
+      height : 480,
+      topics : [ '/image_raw', '/tango/camera/color_1/image_raw', '/tango/camera/fisheye_1/image_raw/compressed' ],
+      labels : [ 'Usb Camera', 'Tango Camera', 'Tango Fisheye Camera' ]
     });
 
     // Set the initial speed .
