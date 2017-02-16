@@ -113,6 +113,13 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  ros-gobbit-description:
+    image: frankjoshua/ros-rpi-gobbit-description
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
   ros-usb-cam:
     image: frankjoshua/ros-rpi-usb-cam
     devices:
