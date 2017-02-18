@@ -15,3 +15,12 @@ atexit.register(cleanup)
 
 lastError = 0
 def line(msg):
+    global state
+    #create new Twist message
+    cmd = Twist()
+    #react based on intersection
+    if(state == 0):
+        cmd.linear.x = 0.25
+            kp = 0.000035
+            kd = 0.000015
+            cmd.angular.z = 

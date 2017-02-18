@@ -1,4 +1,9 @@
 
+            cmd.linear.x = 0
+        lastError = error
+    #Publish the message
+    pub.publish(cmd)
+
 def intersection(msg):
     global state
     #update state
@@ -12,8 +17,9 @@ def listener():
     # name for our 'listener' node so that multiple listeners can
     # run simultaneously.
     rospy.init_node('user_code_node', anonymous=True)
+	rospy.Subscriber('/line/filtered', Int32, line, queue_size=1)
 
-    print "Line follower active..."
+    print "running uploaded blockly code"
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
