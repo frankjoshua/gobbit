@@ -9,12 +9,26 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-qtr:
-    image: frankjoshua/ros-rpi-qtr-8rc
-    cap_add: 
+#  ros-qtr:
+#    image: frankjoshua/ros-rpi-qtr-8rc
+#    cap_add: 
+#      - SYS_RAWIO
+#    devices: 
+#      - "/dev/mem:/dev/mem"
+#    privileged: true
+#    env_file:
+#      - ros.env
+#    network_mode: "host"
+#    restart: unless-stopped
+
+  ros-linedog:
+    image: frankjoshua/ros-rpi-linedog-node
+    cap_add:
       - SYS_RAWIO
-    devices: 
+    devices:
       - "/dev/mem:/dev/mem"
+      - "/lib/modules:/lib/modules"
+      - "/dev/i2c-1:/dev/i2c-1"
     privileged: true
     env_file:
       - ros.env
@@ -35,15 +49,32 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-l298:
-    image: frankjoshua/gobbit-l298n-ros-node
+  ros-motor-hat:
+    image: frankjoshua/ros-rpi-adafruit-motor-hat
     cap_add:
       - SYS_RAWIO
     devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+      - "/lib/modules:/lib/modules"
       - "/dev/mem:/dev/mem"
     volumes:
       - /home/pirate/gobbit:/home/pi/gobbit
-    command: /home/pi/gobbit/L295_ros_node_docker/run.sh
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-servo-hat:
+    image: frankjoshua/ros-rpi-adafruit-servo-hat
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+      - "/lib/modules:/lib/modules"
+      - "/dev/mem:/dev/mem"
+    volumes:
+      - /home/pirate/gobbit:/home/pi/gobbit
     privileged: true
     env_file:
       - ros.env
@@ -52,10 +83,28 @@ services:
 
   web-server:
     image: schoeffm/rpi-nginx-php5
+#    ports:
+#      - "80:80"
     network_mode: "host"
     restart: unless-stopped
     volumes:
       - /home/pirate/gobbit/blockly:/usr/share/nginx/www
+
+  ros-rosbridge-server:
+    image: frankjoshua/ros-rpi-rosbridge-server
+    ports:
+      - "9090:9090"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-web-video-server:
+    image: frankjoshua/ros-rpi-web-video-server
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
   ros-line-follower:
     image: frankjoshua/ros-rpi-line-follower
@@ -77,3 +126,29 @@ services:
     restart: unless-stopped
 >>>>>>> refs/remotes/frankjoshua/master
 
+  ros-gobbit-description:
+    image: frankjoshua/ros-rpi-gobbit-description
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-usb-cam:
+    image: frankjoshua/ros-rpi-usb-cam
+    devices:
+      - "/dev/video0:/dev/video0"
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ui:
+    image: portainer/portainer:arm
+    restart: unless-stopped
+    volumes:
+      - '/var/run/docker.sock:/var/run/docker.sock'
+    expose:
+      - 9000
+    ports:
+      - 9000:9000

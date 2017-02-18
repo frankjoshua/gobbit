@@ -37,10 +37,8 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
     # Figure out how 'wide' each range is
     leftSpan = leftMax - leftMin
     rightSpan = rightMax - rightMin
-
     # Convert the left range into a 0-1 range (float)
     valueScaled = float(value - leftMin) / float(leftSpan)
-
     # Convert the 0-1 range into a value in the right range.
     return rightMin + (valueScaled * rightSpan)
 
@@ -52,21 +50,21 @@ def cmd_callback(msg):
 def line_callback(msg):
     global line
     line = msg.data
-    updateDisplay()
 
 def updateDisplay():
     # Draw a black filled box to clear the image.
     draw.rectangle((0,0,width,height), outline=0, fill=0)
     draw.text((0, 10), "X: " + str(dx) + " Z: " + str(dr), font=font, fill=255)
-    draw.text((0, 0), "Line: " + str(line), font=font, fill=255)
-    linePos = translate(line, 0, 7000, 0, 128);
-    draw.text((linePos, 20), "|", font=font, fill=255)
+    draw.text((0, 20), "Line: " + str(line), font=font, fill=255)
+    linePos = translate(line, 7000, 0, 0, 128);
+    draw.text((linePos, 0), "-", font=font, fill=255)
     disp.image(image)
     # Display image.
     disp.image(image)
     disp.display()
 
 def listener():
+    updateDisplay()
     # In ROS, nodes are uniquely named. If two nodes with the same
     # node are launched, the previous one is kicked off. The
     # anonymous=True flag means that rospy will choose a unique
@@ -75,8 +73,11 @@ def listener():
     rospy.init_node('olde_node', anonymous=True)
     rospy.Subscriber("/cmd_vel", Twist, cmd_callback, queue_size = 1)
     rospy.Subscriber("/line/filtered", Int32, line_callback, queue_size = 1)
-    # spin() simply keeps python from exiting until this node is stopped
-    rospy.spin()
+    #run at 20 hz  
+    r = rospy.Rate(20)
+    while not rospy.is_shutdown():
+        updateDisplay()
+        r.sleep()
 
 if __name__ == '__main__':
     listener()

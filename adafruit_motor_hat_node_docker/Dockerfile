@@ -15,11 +15,6 @@ cd Adafruit-Motor-HAT-Python-Library &&\
 git reset --hard b585c66257d561c2d3ff0d836e03c3f84af697ed &&\
 sudo python setup.py install
 
-EXPOSE 11311
-# setup entrypoint
-ENV ROS_DISTRO indigo
-COPY ./ros_entrypoint.sh /
-COPY ./node.py /
 USER root
-ENTRYPOINT ["/ros_entrypoint.sh"]
 CMD ["python", "/node.py"]
+COPY ./node.py /
