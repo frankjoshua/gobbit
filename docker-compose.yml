@@ -111,7 +111,20 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
+<<<<<<< HEAD
+    restart: always
+    
+  ros-line-follower:
+    image: frankjoshua/user_code_node
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: always
+    volumes:
+      - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
+=======
     restart: unless-stopped
+>>>>>>> refs/remotes/frankjoshua/master
 
   ros-gobbit-description:
     image: frankjoshua/ros-rpi-gobbit-description
