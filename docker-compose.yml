@@ -86,6 +86,7 @@ services:
 #    ports:
 #      - "80:80"
     network_mode: "host"
+    privileged: true
     restart: unless-stopped
     volumes:
       - /home/pirate/gobbit/blockly:/usr/share/nginx/www
@@ -106,25 +107,15 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-line-follower:
-    image: frankjoshua/ros-rpi-line-follower
-    env_file:
-      - ros.env
-    network_mode: "host"
-<<<<<<< HEAD
-    restart: always
-    
-  ros-line-follower:
-    image: frankjoshua/user_code_node
+  ros-user-code:
+    image: frankjoshua/ros-rpi-user-code-node
     env_file:
       - ros.env
     network_mode: "host"
     restart: always
     volumes:
       - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
-=======
     restart: unless-stopped
->>>>>>> refs/remotes/frankjoshua/master
 
   ros-gobbit-description:
     image: frankjoshua/ros-rpi-gobbit-description
