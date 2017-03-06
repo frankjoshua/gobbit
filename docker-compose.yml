@@ -125,6 +125,8 @@ services:
 
   ros-gobbit-description:
     image: frankjoshua/ros-rpi-gobbit-description
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
     env_file:
       - ros.env
     network_mode: "host"
