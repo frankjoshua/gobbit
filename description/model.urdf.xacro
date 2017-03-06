@@ -5,6 +5,34 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <link name="base_link">
+    <visual>
+      <geometry>
+        <box size="0.2 0.1 0.1"/> 
+      </geometry>
+      <material name="grey">
+	<color rgba="0.5 0.5 0.5 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.41148 0.30988 0.05588"/> 
+      </geometry>
+    </collision>
+   <inertial>
+      <mass value="20.0"/>
+      <inertia ixx="1.0" iyy="1.0" izz="1.0"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
+
+  <joint name="center_joint" type="fixed">
+    <axis xyz="0 0 1"/>
+    <parent link="device"/>
+    <child link="base_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0.1"/>
+  </joint>
+
   <link name="device">
     <visual>
       <geometry>
@@ -25,4 +53,5 @@
                ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
+
 </robot>
