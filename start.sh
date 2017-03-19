@@ -1,4 +1,6 @@
 #!/bin/bash
+command -v docker >/dev/null 2>&1 || { echo >&2 "I require docker but it's not installed.  Aborting. Please install from www.docker.com"; exit 1; }
+command -v docker-compose >/dev/null 2>&1 || { echo >&2 "I require docker-compose but it's not installed.  Aborting. Please install from www.docker.com"; exit 1; }
 COLOR='\033[0;36m'
 COLOR2='\033[1;34m'
 NO_COLOR='\033[0;0m'
