@@ -1,2 +1,4 @@
 #Don't save this file it is created by start.sh
 ros.env
+#Don't save cloud 9 config
+.c9

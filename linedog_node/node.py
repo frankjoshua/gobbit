@@ -24,11 +24,13 @@ def readLine():
     global line, intersection, outOfBounds
     try:
         value = bus.read_byte_data(address, 1)
+        print value
         line = translate(value & 63, 63, 1, 0, 7000)
         intersection = (value & 64) / 64
         bounds = (value & 128) / 128
     except:
         line = -1
+        print "Error reading line."
 
 def listener():
     # In ROS, nodes are uniquely named. If two nodes with the same
