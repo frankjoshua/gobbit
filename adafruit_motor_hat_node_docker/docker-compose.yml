@@ -1,0 +1,15 @@
+ros-motor-hat:
+image: frankjoshua/ros-rpi-adafruit-motor-hat
+cap_add:
+  - SYS_RAWIO
+devices:
+  - "/dev/i2c-1:/dev/i2c-1"
+  - "/lib/modules:/lib/modules"
+  - "/dev/mem:/dev/mem"
+volumes:
+  - /home/pirate/gobbit:/home/pi/gobbit
+privileged: true
+env_file:
+  - ros.env
+network_mode: "host"
+restart: unless-stopped

@@ -134,15 +134,15 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-usb-cam:
-    image: frankjoshua/ros-rpi-usb-cam
-    devices:
-      - "/dev/video0:/dev/video0"
-    privileged: true
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-usb-cam:
+  #   image: frankjoshua/ros-rpi-usb-cam
+  #   devices:
+  #     - "/dev/video0:/dev/video0"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   ui:
     image: portainer/portainer:arm

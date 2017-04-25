@@ -2,6 +2,7 @@
 import rospy
 import smbus
 import time
+import threading
 import atexit
 from std_msgs.msg import Int32
 
@@ -23,26 +24,36 @@ def translate(value, leftMin, leftMax, rightMin, rightMax):
 def readLine():
     global line, intersection, outOfBounds
     try:
-        value = bus.read_byte_data(address, 1)
-        print value
-        line = translate(value & 63, 63, 1, 0, 7000)
-        intersection = (value & 64) / 64
-        bounds = (value & 128) / 128
-    except:
+        #bus.write_byte(address, 0x01)
+        #value = bus.read_byte_data(address, 1)
+        values = bus.read_i2c_block_data(address, 1, 2)
+        value = values[0]
+        #print str(values)
+        #print str(value)
+        
+        #value = bus.read_byte(address)
+        #print "b " + str(bus.read_byte(address))
+        #values = bus.read_block_data(address, 0x2)
+        #print "b " + str(values)
+        #line = translate(value & 63, 63, 1, 0, 7000)
+        line = value & 63
+        #intersection = (value & 64) / 64
+        #bounds = (value & 128) / 128
+    except Exception as e:
         line = -1
-        print "Error reading line."
+        print e
 
 def listener():
-    # In ROS, nodes are uniquely named. If two nodes with the same
-    # node are launched, the previous one is kicked off. The
-    # anonymous=True flag means that rospy will choose a unique
-    # name for our 'listener' node so that multiple listeners can
-    # run simultaneously.
+    #Start calibration
+    print "Starting Calibration"
+    bus.write_byte(address, 0x2F)
+    time.sleep(5)
+    
     rospy.init_node('linedog_node', anonymous=False)
     pub = rospy.Publisher('line/filtered', Int32, queue_size=1)
     pubIntersection = rospy.Publisher('line/intersection', Int32, queue_size=1)
     pubBounds = rospy.Publisher('line/bounds', Int32, queue_size=1)
-    r = rospy.Rate(150) # 150hz
+    r = rospy.Rate(150) # 60hz This is about as fast as the line changes at this resolution
     lastLine = line
     lastIntersection = intersection
     lastBounds = bounds
