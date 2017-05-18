@@ -1,0 +1,35 @@
+#!/usr/bin/env python
+import rospy
+import smbus
+import time
+import threading
+import atexit
+from std_msgs.msg import Int32
+
+bus = smbus.SMBus(1)
+address = 0x20
+battery = 0
+
+def readLine():
+    global battery
+    try:
+        battery = bus.read_byte_data(address, 0xF0)
+        #battery = values[0]
+    except Exception as e:
+        battery = battery - 1
+        print e
+
+def listener():
+    rospy.init_node('ultimate_hat_node', anonymous=False)
+    pubBattery = rospy.Publisher('battery', Int32, queue_size=1)
+    pubBattery.publish(-2)
+
+    r = rospy.Rate(1) # hz
+
+    while not rospy.is_shutdown():
+        readLine()
+        pubBattery.publish(battery)
+        r.sleep()    
+
+if __name__ == '__main__':
+    listener()

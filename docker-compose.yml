@@ -9,20 +9,8 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-#  ros-qtr:
-#    image: frankjoshua/ros-rpi-qtr-8rc
-#    cap_add: 
-#      - SYS_RAWIO
-#    devices: 
-#      - "/dev/mem:/dev/mem"
-#    privileged: true
-#    env_file:
-#      - ros.env
-#    network_mode: "host"
-#    restart: unless-stopped
-
-  ros-linedog:
-    image: frankjoshua/ros-rpi-linedog-node
+  ros-ultimate-hat-node:
+    image: frankjoshua/ros-rpi-ultimate-hat-node
     cap_add:
       - SYS_RAWIO
     devices:
@@ -30,85 +18,84 @@ services:
       - "/lib/modules:/lib/modules"
       - "/dev/i2c-1:/dev/i2c-1"
     volumes:
-      - "/home/pirate/gobbit/linedog_node/node.py:/node.py"
+      - "/home/pirate/gobbit/ultimate_hat_node/node.py:/node.py"
     privileged: true
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
+    
+  # ros-linedog:
+  #   image: frankjoshua/ros-rpi-linedog-node
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   volumes:
+  #     - "/home/pirate/gobbit/linedog_node/node.py:/node.py"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  ros-oled-display:
-    image: frankjoshua/ros-rpi-oled-display
-    cap_add:
-      - SYS_RAWIO
-    devices:
-      - "/dev/mem:/dev/mem"
-      - "/lib/modules:/lib/modules"
-      - "/dev/i2c-1:/dev/i2c-1"
-    privileged: true
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-oled-display:
+  #   image: frankjoshua/ros-rpi-oled-display
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  ros-motor-hat:
-    image: frankjoshua/ros-rpi-adafruit-motor-hat
-    cap_add:
-      - SYS_RAWIO
-    devices:
-      - "/dev/i2c-1:/dev/i2c-1"
-      - "/lib/modules:/lib/modules"
-      - "/dev/mem:/dev/mem"
-    volumes:
-      - /home/pirate/gobbit:/home/pi/gobbit
-    privileged: true
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # web-server:
+  #   image: schoeffm/rpi-nginx-php5
+  #   network_mode: "host"
+  #   privileged: true
+  #   restart: unless-stopped
+  #   volumes:
+  #     - /home/pirate/gobbit/blockly:/usr/share/nginx/www
 
-  ros-servo-hat:
-    image: frankjoshua/ros-rpi-adafruit-servo-hat
-    cap_add:
-      - SYS_RAWIO
-    devices:
-      - "/dev/i2c-1:/dev/i2c-1"
-      - "/lib/modules:/lib/modules"
-      - "/dev/mem:/dev/mem"
-    volumes:
-      - /home/pirate/gobbit:/home/pi/gobbit
-    privileged: true
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-rosbridge-server:
+  #   image: frankjoshua/ros-rpi-rosbridge-server
+  #   ports:
+  #     - "9090:9090"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  web-server:
-    image: schoeffm/rpi-nginx-php5
-#    ports:
-#      - "80:80"
-    network_mode: "host"
-    privileged: true
-    restart: unless-stopped
-    volumes:
-      - /home/pirate/gobbit/blockly:/usr/share/nginx/www
+  # ros-web-video-server:
+  #   image: frankjoshua/ros-rpi-web-video-server
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  ros-rosbridge-server:
-    image: frankjoshua/ros-rpi-rosbridge-server
-    ports:
-      - "9090:9090"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-line-follower:
+  #   image: frankjoshua/ros-rpi-line-follower
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  ros-web-video-server:
-    image: frankjoshua/ros-rpi-web-video-server
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-gobbit-description:
+  #   image: frankjoshua/ros-rpi-gobbit-description
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
+################## DISABLED #####################
   # ros-user-code:
   #   image: frankjoshua/ros-rpi-user-code-node
   #   env_file:
@@ -117,23 +104,7 @@ services:
   #   restart: always
   #   volumes:
   #     - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
-
-  ros-line-follower:
-    image: frankjoshua/ros-rpi-line-follower
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
-  ros-gobbit-description:
-    image: frankjoshua/ros-rpi-gobbit-description
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
+  
   # ros-usb-cam:
   #   image: frankjoshua/ros-rpi-usb-cam
   #   devices:
@@ -144,12 +115,12 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  ui:
-    image: portainer/portainer:arm
-    restart: unless-stopped
-    volumes:
-      - '/var/run/docker.sock:/var/run/docker.sock'
-    expose:
-      - 9000
-    ports:
-      - 9000:9000
+  # ui:
+  #   image: portainer/portainer:arm
+  #   restart: unless-stopped
+  #   volumes:
+  #     - '/var/run/docker.sock:/var/run/docker.sock'
+  #   expose:
+  #     - 9000
+  #   ports:
+  #     - 9000:9000
