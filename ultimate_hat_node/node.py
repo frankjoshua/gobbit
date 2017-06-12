@@ -7,13 +7,23 @@ import atexit
 
 bus = smbus.SMBus(1)
 address = 0x20
+leftMotor = 0xF0
+rightMotor = 0xF1
+servo = 0xF6
+
 #Make sure motors are stopped
-bus.write_byte_data(address, 0xF1, 0)
-bus.write_byte_data(address, 0xF0, 0)
+bus.write_byte_data(address, leftMotor, 0)
+bus.write_byte_data(address, rightMotor, 0)
+bus.write_byte_data(address, servo, 10000)
 
 def constrain(n, minn, maxn):
     return max(min(maxn, n), minn)
 
+def toTwosComp(value):
+    result = value
+    if value < 0:
+        result = -result + 128
+    return result
 
 def driveMotors(msg):
     dx = msg.linear.x
@@ -23,8 +33,8 @@ def driveMotors(msg):
     left = 1.0 * dx - dr * w / 2
     leftPower = constrain(left,-1.0,1.0)
     rightPower = constrain(right,-1.0,1.0)
-    bus.write_byte_data(address, 0xF1, int(leftPower * 100))
-    bus.write_byte_data(address, 0xF0, int(rightPower * 100))
+    bus.write_byte_data(address, leftMotor, toTwosComp(int(leftPower * 100)))
+    bus.write_byte_data(address, rightMotor, toTwosComp(int(rightPower * 100)))
 
 lastControl = time.time()
 
