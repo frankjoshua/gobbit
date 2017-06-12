@@ -11,47 +11,78 @@
         <box size="0.2 0.1 0.1"/> 
       </geometry>
       <material name="blue">
-	<color rgba="0.0 0.0 0.5 1"/>
+	      <color rgba="0.0 0.0 0.5 1"/>
       </material>
     </visual>
     <collision>
       <geometry>
-        <box size="0.41148 0.30988 0.05588"/> 
+        <box size="0.2 0.1 0.1"/> 
       </geometry>
     </collision>
-   <inertial>
-      <mass value="20.0"/>
-      <inertia ixx="1.0" iyy="1.0" izz="1.0"
-               ixy="0" ixz="0" iyz="0"/>
-    </inertial>
   </link>
 
-  <joint name="center_joint" type="fixed">
-    <axis xyz="0 0 1"/>
-    <parent link="device"/>
-    <child link="base_link"/>
-    <origin rpy="0 0 0" xyz="0 0 0.2"/>
-  </joint>
+ <!-- <joint name="center_joint" type="fixed">-->
+ <!--   <axis xyz="0 0 1"/>-->
+ <!--   <parent link="device"/>-->
+ <!--   <child link="base_link"/>-->
+ <!--   <origin rpy="0 0 0" xyz="0 0 0.2"/>-->
+ <!-- </joint>-->
 
-  <link name="device">
+ <!-- <link name="device">-->
+ <!--   <visual>-->
+ <!--     <geometry>-->
+ <!--       <box size="0.41148 0.30988 0.05588"/>-->
+ <!--     </geometry>-->
+ <!--     <material name="black">-->
+	<!--<color rgba="0.0 0.0 0.0 1"/>-->
+ <!--     </material>-->
+ <!--   </visual>-->
+ <!--   <collision>-->
+ <!--     <geometry>-->
+ <!--       <box size="0.41148 0.30988 0.05588"/>-->
+ <!--     </geometry>-->
+ <!--   </collision>-->
+ <!--  <inertial>-->
+ <!--     <mass value="20.0"/>-->
+ <!--     <inertia ixx="1.0" iyy="1.0" izz="1.0"-->
+ <!--              ixy="0" ixz="0" iyz="0"/>-->
+ <!--   </inertial>-->
+ <!-- </link>-->
+  
+  <joint name="laser_joint" type="fixed">
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="laser"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  
+  <link name="laser">
     <visual>
       <geometry>
-        <box size="0.41148 0.30988 0.05588"/>
+        <box size="0.1 0.1 0.1"/>
       </geometry>
-      <material name="black">
-	<color rgba="0.0 0.0 0.0 1"/>
-      </material>
+      <material name="purple">
+	      <color rgba="0.5 0.0 0.5 1"/>
+	    </material>
     </visual>
-    <collision>
+  </link>
+  
+  <joint name="odom_joint" type="fixed">
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="scanmatcher_frame"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  
+    <link name="scanmatcher_frame">
+    <visual>
       <geometry>
-        <box size="0.41148 0.30988 0.05588"/>
+        <box size="0.1 0.1 0.1"/>
       </geometry>
-    </collision>
-   <inertial>
-      <mass value="20.0"/>
-      <inertia ixx="1.0" iyy="1.0" izz="1.0"
-               ixy="0" ixz="0" iyz="0"/>
-    </inertial>
+      <material name="red">
+	      <color rgba="0.5 0.0 0.1 1"/>
+	    </material>
+    </visual>
   </link>
 
 </robot>

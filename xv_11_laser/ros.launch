@@ -1,0 +1,6 @@
+<launch>
+  <node pkg="xv_11_laser_driver" type="neato_laser_publisher" name="neato_laser" output="screen">
+    <param name="port" value="/dev/laser_port"/>
+  </node>
+  <node pkg="tf" type="static_transform_publisher" name="link1_broadcaster" args="0 0 0 0 0 0 1 laser neato_laser 100" />
+</launch>

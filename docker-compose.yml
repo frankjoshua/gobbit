@@ -9,22 +9,82 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-ultimate-hat-node:
-    image: frankjoshua/ros-rpi-ultimate-hat-node
-    cap_add:
-      - SYS_RAWIO
-    devices:
-      - "/dev/mem:/dev/mem"
-      - "/lib/modules:/lib/modules"
-      - "/dev/i2c-1:/dev/i2c-1"
-    volumes:
-      - "/home/pirate/gobbit/ultimate_hat_node/node.py:/node.py"
+  web-server:
+    image: schoeffm/rpi-nginx-php5
+    network_mode: "host"
     privileged: true
+    restart: unless-stopped
+    volumes:
+      - /home/pirate/gobbit/blockly:/usr/share/nginx/www
+
+  ros-rosbridge-server:
+    image: frankjoshua/ros-rpi-rosbridge-server
+    ports:
+      - "9090:9090"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-web-video-server:
+    image: frankjoshua/ros-rpi-web-video-server
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-gobbit-description:
+    image: frankjoshua/ros-rpi-gobbit-description
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+    tty: true
+    
+  ros-hector-mapping:
+    image: frankjoshua/rpi-ros-hector-mapping
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+    
+  # ros-line-follower:
+  #   image: frankjoshua/ros-rpi-line-follower
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+    
+################## HARDWARE #####################
+
+  ros-xv-11-laser:
+    image: frankjoshua/docker_ros_xv_11
+    devices:
+      - "/dev/ttyACM0:/dev/laser_port"
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
     
+  # ros-ultimate-hat-node:
+  #   image: frankjoshua/ros-rpi-ultimate-hat-node
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   volumes:
+  #     - "/home/pirate/gobbit/ultimate_hat_node/node.py:/node.py"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+  
   # ros-linedog:
   #   image: frankjoshua/ros-rpi-linedog-node
   #   cap_add:
@@ -54,47 +114,7 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-
-  web-server:
-    image: schoeffm/rpi-nginx-php5
-    network_mode: "host"
-    privileged: true
-    restart: unless-stopped
-    volumes:
-      - /home/pirate/gobbit/blockly:/usr/share/nginx/www
-
-  ros-rosbridge-server:
-    image: frankjoshua/ros-rpi-rosbridge-server
-    ports:
-      - "9090:9090"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
-  ros-web-video-server:
-    image: frankjoshua/ros-rpi-web-video-server
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
-  # ros-line-follower:
-  #   image: frankjoshua/ros-rpi-line-follower
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
-
-  ros-gobbit-description:
-    image: frankjoshua/ros-rpi-gobbit-description
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
+    
 ################## DISABLED #####################
   # ros-user-code:
   #   image: frankjoshua/ros-rpi-user-code-node
