@@ -15,7 +15,7 @@ services:
     privileged: true
     restart: unless-stopped
     volumes:
-      - /home/pirate/gobbit/blockly:/usr/share/nginx/www
+      - $HOME/gobbit/blockly:/usr/share/nginx/www
 
   ros-rosbridge-server:
     image: frankjoshua/ros-rpi-rosbridge-server
@@ -26,12 +26,12 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-web-video-server:
-    image: frankjoshua/ros-rpi-web-video-server
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+#  ros-web-video-server:
+#    image: frankjoshua/ros-rpi-web-video-server
+#    env_file:
+#      - ros.env
+#    network_mode: "host"
+#    restart: unless-stopped
 
   ros-gobbit-description:
     image: frankjoshua/ros-rpi-gobbit-description
@@ -41,7 +41,7 @@ services:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
-    tty: true
+#    tty: true
     
   ros-hector-mapping:
     image: frankjoshua/rpi-ros-hector-mapping
