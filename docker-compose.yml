@@ -9,22 +9,22 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  web-server:
-    image: schoeffm/rpi-nginx-php5
-    network_mode: "host"
-    privileged: true
-    restart: unless-stopped
-    volumes:
-      - $HOME/gobbit/blockly:/usr/share/nginx/www
+  # web-server:
+  #   image: schoeffm/rpi-nginx-php5
+  #   network_mode: "host"
+  #   privileged: true
+  #   restart: unless-stopped
+  #   volumes:
+  #     - $HOME/gobbit/blockly:/usr/share/nginx/www
 
-  ros-rosbridge-server:
-    image: frankjoshua/ros-rpi-rosbridge-server
-    ports:
-      - "9090:9090"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-rosbridge-server:
+  #   image: frankjoshua/ros-rpi-rosbridge-server
+  #   ports:
+  #     - "9090:9090"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
 #  ros-web-video-server:
 #    image: frankjoshua/ros-rpi-web-video-server
@@ -41,10 +41,11 @@ services:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
-#    tty: true
     
   ros-hector-mapping:
     image: frankjoshua/rpi-ros-hector-mapping
+    volumes:
+      - $HOME/gobbit/launch_files/hector.launch:/ros.launch
     env_file:
       - ros.env
     network_mode: "host"
