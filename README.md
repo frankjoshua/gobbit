@@ -9,7 +9,7 @@ sudo pip install -U docker==2.4.2
 ```
 
 ## Quick Start
-1. Install [HypriotOS](http://blog.hypriot.com/) onto a 16GB or larger micro SD<br>
+1. Install [HypriotOS](http://blog.hypriot.com/) onto a *32GB* or larger micro SD<br>
 2. git clone https://github.com/frankjoshua/gobbit.git<br>
 3. cd gobbit && ./start.sh<br>
 4. Wait.... The PI will download many gigs of data it's going to take a while
