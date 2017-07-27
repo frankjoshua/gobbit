@@ -1,10 +1,12 @@
 # Gobbit Robot with ROS and Raspberry Pi 3
 
 ## Hypriot OS has an issue
-Version 1.5.0 of Hypriot has a bug in Docker. Use the following command to fix it.
+Version 1.5.0 of Hypriot has a bug in Docker. Use the following command to fix it. https://github.com/docker/compose/issues/4972
+```
 sudo apt-get remove python-pip
 sudo easy_install pip
 sudo pip install -U docker==2.4.2
+```
 
 ## Quick Start
 1. Install [HypriotOS](http://blog.hypriot.com/) onto a 16GB or larger micro SD<br>
