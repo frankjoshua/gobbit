@@ -42,14 +42,14 @@ services:
     network_mode: "host"
     restart: unless-stopped
     
-  ros-hector-mapping:
-    image: frankjoshua/rpi-ros-hector-mapping
-    volumes:
-      - $HOME/gobbit/launch_files/hector.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-hector-mapping:
+  #   image: frankjoshua/rpi-ros-hector-mapping
+  #   volumes:
+  #     - $HOME/gobbit/launch_files/hector.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
     
   # ros-line-follower:
@@ -61,30 +61,40 @@ services:
     
 ################## HARDWARE #####################
 
-  ros-xv-11-laser:
-    image: frankjoshua/docker_ros_xv_11
-    devices:
-      - "/dev/ttyACM0:/dev/laser_port"
+  ros-arduino-motor:
+    image: frankjoshua/rpi-ros-arduino-motor
     env_file:
       - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-    
-  ros-ultimate-hat-node:
-    image: frankjoshua/ros-rpi-ultimate-hat-node
-    cap_add:
-      - SYS_RAWIO
-    devices:
-      - "/dev/mem:/dev/mem"
-      - "/lib/modules:/lib/modules"
-      - "/dev/i2c-1:/dev/i2c-1"
-    volumes:
-      - "$HOME/gobbit/ultimate_hat_node/node.py:/node.py"
     privileged: true
-    env_file:
-      - ros.env
     network_mode: "host"
+    volumes:
+      - /dev/ttyACM0:/dev/arduino_motor
     restart: unless-stopped
+
+  # ros-xv-11-laser:
+  #   image: frankjoshua/docker_ros_xv_11
+  #   devices:
+  #     - "/dev/ttyACM0:/dev/laser_port"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+    
+  # ros-ultimate-hat-node:
+  #   image: frankjoshua/ros-rpi-ultimate-hat-node
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   volumes:
+  #     - "$HOME/gobbit/ultimate_hat_node/node.py:/node.py"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
   
   # ros-linedog:
   #   image: frankjoshua/ros-rpi-linedog-node

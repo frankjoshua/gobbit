@@ -1,5 +1,10 @@
 #Gobbit Robot with ROS and Raspberry Pi 3
 
+##IDE
+There is a web based editor that can be used to edit code directly on the robot.
+Just run ./ace_ide/start.sh
+Then open the ide from http://ROBOTS_IP_ADDRESS:8181
+
 ##Quick Start
 1. Install [HypriotOS](http://blog.hypriot.com/) onto a 16GB or larger micro SD<br>
 2. git clone https://github.com/frankjoshua/gobbit.git<br>
