@@ -42,6 +42,13 @@ services:
     network_mode: "host"
     restart: unless-stopped
     
+  ros-diff-drive:
+    image: frankjoshua/ros-diff-drive
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+    
   # ros-hector-mapping:
   #   image: frankjoshua/rpi-ros-hector-mapping
   #   volumes:
