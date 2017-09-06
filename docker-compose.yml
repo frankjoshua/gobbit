@@ -49,6 +49,15 @@ services:
     network_mode: "host"
     restart: unless-stopped
     
+  ros-gps-nav:
+    image: frankjoshua/ros-rpi-gps-nav-node
+    env_file:
+      - ros.env
+    volumes:
+      - "$HOME/gobbit/docker_ros_nodes/gps_nav/node.py:/node.py"
+    network_mode: "host"
+    restart: unless-stopped
+    
   # ros-hector-mapping:
   #   image: frankjoshua/rpi-ros-hector-mapping
   #   volumes:
