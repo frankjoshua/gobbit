@@ -8,11 +8,14 @@ from sensor_msgs.msg import NavSatFix
 import math
 import time
 import atexit
+from pid_controller.pid import PID
 
 #Current destination
 destination = NavSatFix()
 #Last location
 lastFix = NavSatFix()
+#PID controller for stearing
+pid = PID(p=0.1, i=0.004, d=3.0)
 
 #Motor controller topic
 motorPub = rospy.Publisher('/pocketbot/cmd_vel', Twist, queue_size=1)
@@ -69,15 +72,20 @@ def getDirection(current, destination):
     bearing = (math.degrees(math.atan2(dLong, dPhi)) + 360.0) % 360.0;
     return bearing
 
-def driveRobot(kmToWaypoint, error):
+def driveRobot(kmToWaypoint, error, setPoint, point):
     #Send command to robot
     drive = Twist()
     if kmToWaypoint > error:
         #Drive forward
-        drive.linear.x = 0.25
+        drive.linear.x = error
     else:
         #Stop
         drive.linear.x = 0.0
+        
+    output = pid(setPoint - point)
+    drive.angular.y = setPoint
+    drive.angular.x = point
+    drive.angular.z = output
     #Publish Twist command    
     motorPub.publish(drive)
 
@@ -98,7 +106,8 @@ def gps(navsat):
     #Save last location
     lastFix = navsat
     #Drive robot
-    driveRobot(distance, 0.003)
+    errorInKilometers = navsat.position_covariance[0] / 1000
+    driveRobot(distance, errorInKilometers, direction, direction)
     
 
 def waypoint(navsat):

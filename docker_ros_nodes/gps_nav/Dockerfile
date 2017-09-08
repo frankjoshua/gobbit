@@ -7,6 +7,7 @@ RUN apt-get update && apt-get upgrade -y &&\
     apt-get -y clean &&\
     apt-get -y purge &&\
     pip install RPi.GPIO &&\
+    pip install pid_controller &&\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
