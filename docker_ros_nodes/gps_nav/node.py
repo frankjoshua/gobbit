@@ -3,6 +3,7 @@ import rospy
 from math import radians, cos, sin, asin, sqrt, atan2, degrees
 from std_msgs.msg import Int32
 from std_msgs.msg import Float64
+from std_msgs.msg import Float32
 from geometry_msgs.msg import Twist
 from sensor_msgs.msg import NavSatFix
 import math
@@ -14,18 +15,19 @@ from pid_controller.pid import PID
 destination = NavSatFix()
 #Last location
 lastFix = NavSatFix()
+#Current Heading
+currentHeading = 0
 #PID controller for stearing
-pid = PID(p=0.1, i=0.004, d=3.0)
+pid = PID(p=0.002, i=0.0, d=0.0)
 
 #Motor controller topic
 motorPub = rospy.Publisher('/pocketbot/cmd_vel', Twist, queue_size=1)
-headingPub = rospy.Publisher('/heading', Float64, queue_size=1)
 directionPub = rospy.Publisher('/direction', Float64, queue_size=1)
 distancePub = rospy.Publisher('/distance', Float64, queue_size=1)
 
 def cleanup():
     #Stop the motors
-    pub.publish(Twist())
+    motorPub.publish(Twist())
 
 atexit.register(cleanup)
 
@@ -81,8 +83,9 @@ def driveRobot(kmToWaypoint, error, setPoint, point):
     else:
         #Stop
         drive.linear.x = 0.0
-        
-    output = pid(setPoint - point)
+    
+    pid.target = setPoint    
+    output = pid(feedback=point)
     drive.angular.y = setPoint
     drive.angular.x = point
     drive.angular.z = output
@@ -90,31 +93,31 @@ def driveRobot(kmToWaypoint, error, setPoint, point):
     motorPub.publish(drive)
 
 def gps(navsat):
-    global lastFix, destination
-    #Check if location has changed
-    if lastFix.longitude == navsat.longitude and lastFix.latitude == navsat.latitude:
-        return
-    #Get distance to destination
-    distance = getDistance(navsat, destination)
-    distancePub.publish(distance)
-    #Get direction of destination
-    direction = getDirection(navsat, destination)
-    directionPub.publish(direction)
-    #Get current direction
-    heading = getDirection(lastFix, navsat)
-    headingPub.publish(heading)
+    global lastFix
     #Save last location
     lastFix = navsat
-    #Drive robot
-    errorInKilometers = navsat.position_covariance[0] / 1000
-    driveRobot(distance, errorInKilometers, direction, direction)
-    
 
 def waypoint(navsat):
     #Save destination
     global destination
     destination = navsat
     
+def heading(newHeading):
+    #save heading
+    global currentHeading
+    currentHeading = newHeading.data
+    
+def publishUpdates():
+    global lastFix, destination, currentHeading
+    #Get distance to destination
+    distance = getDistance(lastFix, destination)
+    distancePub.publish(distance)
+    #Get direction of destination
+    direction = getDirection(lastFix, destination)
+    directionPub.publish(direction)
+    #Drive robot
+    errorInKilometers = lastFix.position_covariance[0] / 1000
+    driveRobot(distance, errorInKilometers, direction, currentHeading)
 
 def listener():
     rospy.init_node('gps_nav', anonymous=False)
@@ -122,8 +125,15 @@ def listener():
     rospy.Subscriber('/pocketbot/fix', NavSatFix, gps, queue_size=1)
     #Listen for new waypoints
     rospy.Subscriber('/pocketbot/waypoint', NavSatFix, waypoint, queue_size=1)
+    #Listen for heading updates
+    rospy.Subscriber('/pocketbot/heading', Float32, heading, queue_size=1)
     
     print "GPS Nav Loaded..."
+    
+    rate = rospy.Rate(10) # 10hz
+    while not rospy.is_shutdown():
+        publishUpdates()
+        rate.sleep()
 
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
