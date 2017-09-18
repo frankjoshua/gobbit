@@ -1,5 +1,5 @@
-#FROM pablogn/rpi-ros-core-indigo
-FROM esteve/ros:kinetic-robot-armhf
+#FROM esteve/ros:kinetic-robot-armhf
+FROM ros:kinetic-robot
 
 #install RPi.GPIO
 RUN apt-get update && apt-get upgrade -y &&\
