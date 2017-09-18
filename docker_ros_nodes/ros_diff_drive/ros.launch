@@ -1,6 +1,6 @@
 <launch>
   <param name="ticks_meter" value="1435" />
   <node pkg="differential_drive" name="diff_tf" type="diff_tf.py" output="screen">
-    <param name="~base_width" value="0.39" />
+    <param name="~base_width" value="0.78" />
   </node>
 </launch>
