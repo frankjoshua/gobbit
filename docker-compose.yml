@@ -34,21 +34,21 @@ services:
 #    restart: unless-stopped
 
   ros-gobbit-description:
-    image: frankjoshua/ros-rpi-gobbit-description
+    image: frankjoshua/ros-gobbit-description
     volumes:
       - /etc/localtime:/etc/localtime:ro
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
-    
+
   ros-diff-drive:
     image: frankjoshua/ros-diff-drive
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
-    
+
   ros-gps-nav:
     image: frankjoshua/ros-rpi-gps-nav-node
     env_file:
@@ -57,7 +57,7 @@ services:
       - "$HOME/gobbit/docker_ros_nodes/gps_nav/node.py:/node.py"
     network_mode: "host"
     restart: unless-stopped
-    
+
   # ros-hector-mapping:
   #   image: frankjoshua/rpi-ros-hector-mapping
   #   volumes:
@@ -67,14 +67,14 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-    
+
   # ros-line-follower:
   #   image: frankjoshua/ros-rpi-line-follower
   #   env_file:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-    
+
 ################## HARDWARE #####################
 
   ros-arduino-motor:
@@ -95,7 +95,7 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-    
+
   # ros-ultimate-hat-node:
   #   image: frankjoshua/ros-rpi-ultimate-hat-node
   #   cap_add:
@@ -111,7 +111,7 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-  
+
   # ros-linedog:
   #   image: frankjoshua/ros-rpi-linedog-node
   #   cap_add:
@@ -141,7 +141,7 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-    
+
 ################## DISABLED #####################
   # ros-user-code:
   #   image: frankjoshua/ros-rpi-user-code-node
@@ -151,7 +151,7 @@ services:
   #   restart: always
   #   volumes:
   #     - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
-  
+
   # ros-usb-cam:
   #   image: frankjoshua/ros-rpi-usb-cam
   #   devices:

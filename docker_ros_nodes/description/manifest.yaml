@@ -1,0 +1,12 @@
+image: frankjoshua/ros-gobbit-description
+manifests:
+  -
+    image: frankjoshua/ros-gobbit-description:armhf
+    platform:
+      architecture: arm
+      os: linux
+  -
+    image: frankjoshua/ros-gobbit-description:amd64
+    platform:
+      architecture: amd64
+      os: linux
