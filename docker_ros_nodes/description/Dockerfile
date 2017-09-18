@@ -1,4 +1,5 @@
-FROM esteve/ros:kinetic-robot-armhf
+#FROM esteve/ros:kinetic-robot-armhf
+FROM ros:kinetic-robot
 
 RUN apt-get update &&\
     apt-get install -y ros-kinetic-joint-state-publisher ros-kinetic-robot-state-publisher &&\
