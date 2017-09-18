@@ -1,5 +1,5 @@
 #!/bin/sh
-ARCH='uname -m'
+ARCH=$(dpkg --print-architecture)
 echo $ARCH
-docker build -t frankjoshua/ros-rpi-gobbit-description .
-docker push frankjoshua/ros-rpi-gobbit-description
+docker build -t frankjoshua/ros-gobbit-description-$ARCH .
+docker push frankjoshua/ros-gobbit-description-$ARCH
