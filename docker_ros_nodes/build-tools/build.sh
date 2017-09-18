@@ -1,0 +1,6 @@
+#!/bin/sh
+ARCH=$(dpkg --print-architecture)
+echo $ARCH
+docker build -t frankjoshua/$1:$ARCH .
+docker push frankjoshua/$1:$ARCH
+manifest-tool push from-spec manifest.yaml
