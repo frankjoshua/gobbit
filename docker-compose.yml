@@ -78,7 +78,7 @@ services:
 ################## HARDWARE #####################
 
   ros-arduino-motor:
-    image: frankjoshua/rpi-ros-arduino-motor
+    image: frankjoshua/ros-arduino-serial
     env_file:
       - ros.env
     privileged: true
