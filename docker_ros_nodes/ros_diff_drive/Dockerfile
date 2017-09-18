@@ -1,4 +1,5 @@
-FROM esteve/ros:kinetic-desktop-armhf
+#FROM esteve/ros:kinetic-desktop-armhf
+FROM ros:kinetic-robot
 
 #RUN apt-get update && apt-get upgrade -y &&\
 #    apt-get -y clean &&\
