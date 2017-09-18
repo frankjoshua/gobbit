@@ -1,0 +1,12 @@
+image: frankjoshua/ros-master
+manifests:
+  -
+    image: frankjoshua/ros-master:armhf
+    platform:
+      architecture: arm
+      os: linux
+  -
+    image: frankjoshua/ros-master:amd64
+    platform:
+      architecture: amd64
+      os: linux
