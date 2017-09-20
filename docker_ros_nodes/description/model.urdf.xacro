@@ -57,40 +57,17 @@
     </inertial>
   </link>
 
-  <joint name="odom_joint" type="fixed">
-    <axis xyz="0 0 0"/>
-    <parent link="base_link"/>
-    <child link="scanmatcher_frame"/>
-    <origin rpy="0 0 0" xyz="0 0 0.1"/>
-  </joint>
-
-  <link name="scanmatcher_frame">
-    <visual>
-      <geometry>
-        <box size="0.1 0.1 0.1"/>
-      </geometry>
-      <material name="red">
-	      <color rgba="0.5 0.0 0.1 1"/>
-	    </material>
-    </visual>
-    <inertial>
-      <mass value="0.01"/>
-      <inertia ixx="0.001" iyy="0.001" izz="0.001"
-               ixy="0" ixz="0" iyz="0"/>
-    </inertial>
-  </link>
-
-    <joint name="imu_joint" type="fixed">
+  <joint name="imu_joint" type="fixed">
     <axis xyz="0 0 0"/>
     <parent link="base_link"/>
     <child link="pocketbot"/>
-    <origin rpy="0 0 0.0" xyz="0 0 0.1"/>
+    <origin rpy="0 0 0.0" xyz="0 0 ${laser_size * 2}"/>
   </joint>
 
-    <link name="pocketbot">
+  <link name="pocketbot">
     <visual>
       <geometry>
-        <box size="0.1 0.1 0.1"/>
+        <box size="${laser_size} ${laser_size} ${laser_size}"/>
       </geometry>
       <material name="green">
 	      <color rgba="0.1 0.8 0.1 1"/>

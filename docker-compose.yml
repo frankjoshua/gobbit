@@ -61,9 +61,9 @@ services:
   #   restart: unless-stopped
 
   ros-hector-mapping:
-    image: frankjoshua/rpi-ros-hector-mapping
+    image: frankjoshua/ros-hector-mapping
     volumes:
-      - $HOME/gobbit/launch_files/hector.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/hector_mapping/ros.launch:/ros.launch
     env_file:
       - ros.env
     network_mode: "host"
