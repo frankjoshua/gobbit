@@ -7,6 +7,7 @@ RUN apt-get update &&\
     apt-get -y purge &&\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-CMD ["roslaunch", "--wait", "/description.launch"]
+CMD  ["/launch.sh"]
+COPY ./launch.sh /
 COPY ./description.launch /
 COPY ./model.urdf.xacro /

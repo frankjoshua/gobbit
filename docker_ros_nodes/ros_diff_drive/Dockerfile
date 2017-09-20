@@ -16,7 +16,7 @@ RUN /bin/bash -c "source /opt/ros/kinetic/setup.bash" &&\
 
 RUN chmod a+x /root/catkin_ws/src/differential-drive/scripts/*.py
 
-CMD ["roslaunch", "--wait", "/ros.launch"]
+CMD ["/bin/bash", "-C", "roslaunch", "--wait", "/ros.launch", ";", "/bin/bash"]
 COPY ./entrypoint.sh /
 RUN chmod a+x /entrypoint.sh
 ENTRYPOINT ["/entrypoint.sh"]
