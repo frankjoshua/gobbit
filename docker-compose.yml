@@ -69,6 +69,18 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  ros-move-base:
+    image: frankjoshua/ros-move-base
+    env_file:
+      - ros.env
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/move_base/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/move_base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/move_base/costmap_common_params.yaml:/costmap_common_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/move_base/global_costmap_params.yaml:/global_costmap_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/move_base/local_costmap_params.yaml:/local_costmap_params.yaml
+    network_mode: "host"
+    restart: unless-stopped
 
   # ros-line-follower:
   #   image: frankjoshua/ros-rpi-line-follower
