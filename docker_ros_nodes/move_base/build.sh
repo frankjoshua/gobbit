@@ -1,2 +1,2 @@
 #!/bin/sh
-../build-tools/build.sh frankjoshua/ros-move-base 
+../build-tools/build.sh ros-move-base 
