@@ -1,0 +1,5 @@
+local_costmap:
+  rolling_window: true
+  static_map: false
+  update_frequency: 5.0
+  publish_frequency: 5.0
