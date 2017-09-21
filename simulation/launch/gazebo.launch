@@ -5,6 +5,6 @@
   </include>
 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
-        args="-param robot_description -urdf -model simrobot -x 0 -y 0"/>
+        args="-param robot_description -urdf -model simrobot -x 0 -y 0 -z 1"/>
 
 </launch>
