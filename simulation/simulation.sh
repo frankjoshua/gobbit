@@ -1,4 +1,4 @@
 #!/bin/bash
 
 mydir=$(dirname "$0")
-roslaunch $mydir/launch/gazebo.launch
+roslaunch --wait $mydir/launch/gazebo.launch

@@ -1,4 +1,5 @@
 local_costmap:
+  global_frame: odom
   rolling_window: true
   static_map: false
   update_frequency: 5.0
