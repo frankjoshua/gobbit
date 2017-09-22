@@ -15,12 +15,12 @@
     <!-- Map size / start point -->
     <param name="map_resolution" value="0.05"/>
     <param name="map_size" value="1024"/>
-    <param name="map_multi_res_levels" value="3" />
+    <param name="map_multi_res_levels" value="5" />
 
     <!-- Map update parameters -->
     <param name="map_update_angle_thresh" value="0.05" />
-    <param name="map_update_distance_thresh" value="0.05" />
-    <param name="map_pub_period" value="0.5" />
+    <param name="map_update_distance_thresh" value="0.1" />
+    <param name="map_pub_period" value="1.0" />
 
     <!-- Advertising config -->
     <param name="scan_topic" value="/scan"/>
