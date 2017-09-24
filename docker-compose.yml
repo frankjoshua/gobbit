@@ -70,6 +70,16 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  ros-hector-mapping:
+    image: frankjoshua/ros-map-server
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/map_server/map.yaml:/map.yaml
+      - $HOME/gobbit/docker_ros_nodes/map_server/map.png:/map.png
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
   ros-move-base:
     image: frankjoshua/ros-move-base
     env_file:
