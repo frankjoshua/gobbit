@@ -1,12 +1,12 @@
-image: frankjoshua/ros-lunar-robot-localization
+image: frankjoshua/ros-robot-localization
 manifests:
   -
-    image: frankjoshua/ros-lunar-robot-localization:armhf
+    image: frankjoshua/ros-robot-localization:armhf
     platform:
       architecture: arm
       os: linux
   -
-    image: frankjoshua/ros-lunar-robot-localization:amd64
+    image: frankjoshua/ros-robot-localization:amd64
     platform:
       architecture: amd64
       os: linux
