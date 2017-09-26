@@ -53,11 +53,6 @@
 	      <color rgba="0.5 0.0 0.5 1"/>
 	    </material>
     </visual>
-    <inertial>
-      <mass value="0.1"/>
-      <inertia ixx="0.001" iyy="0.001" izz="0.001"
-               ixy="0" ixz="0" iyz="0"/>
-    </inertial>
   </link>
 
   <joint name="imu_joint" type="fixed">
@@ -178,7 +173,7 @@
     <material>Gazebo/Blue</material>
     <sensor type="ray" name="laser_sensor">
       <pose>0 0 0 0 0 0</pose>
-      <visualize>false</visualize>
+      <visualize>true</visualize>
       <update_rate>40</update_rate>
       <ray>
         <scan>
@@ -224,6 +219,18 @@
       <odometryTopic>odom</odometryTopic>
       <odometryFrame>odom</odometryFrame>
       <robotBaseFrame>base_link</robotBaseFrame>
+      <publishTf>1</publishTf>
+    </plugin>
+  </gazebo>
+
+  <gazebo>
+    <plugin name="imu_plugin" filename="libgazebo_ros_imu.so">
+      <alwaysOn>true</alwaysOn>
+      <bodyName>pocketbot</bodyName>
+      <topicName>imu</topicName>
+      <serviceName>imu_service</serviceName>
+      <gaussianNoise>0.0</gaussianNoise>
+      <updateRate>20.0</updateRate>
     </plugin>
   </gazebo>
 

@@ -3,7 +3,7 @@
     <rosparam command="load" file="/params.yaml" />
 
     <remap from="odom" to="odom"/>
-    <remap from="imu" to="pocketbot/imu"/>
+    <remap from="imu" to="imu"/>
    <!--  Placeholder for output topic remapping
     <remap from="odometry/filtered" to=""/>
     <remap from="accel/filtered" to=""/>

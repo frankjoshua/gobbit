@@ -61,35 +61,35 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  # ros-hector-mapping:
-  #   image: frankjoshua/ros-hector-mapping
+  ros-hector-mapping:
+    image: frankjoshua/ros-hector-mapping
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/hector_mapping/ros.launch:/ros.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  # ros-robot-localization:
+  #   image: frankjoshua/ros-robot-localization
   #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/hector_mapping/ros.launch:/ros.launch
+  #     - $HOME/gobbit/docker_ros_nodes/robot_localization/ros.launch:/ros.launch
+  #     - $HOME/gobbit/docker_ros_nodes/robot_localization/params.yaml:/params.yaml
   #   env_file:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  ros-robot-localization:
-    image: frankjoshua/ros-robot-localization
-    volumes:
-      - $HOME/gobbit/docker_robot_localization/ros.launch:/ros.launch
-      - $HOME/gobbit/docker_robot_localization/params.yaml:/params.yaml
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
-  ros-map-server:
-    image: frankjoshua/ros-map-server
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/map_server/map.yaml:/map.yaml
-      - $HOME/gobbit/docker_ros_nodes/map_server/map.pgm:/map.pgm
-      - $HOME/gobbit/docker_ros_nodes/map_server/ros.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-map-server:
+  #   image: frankjoshua/ros-map-server
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/map_server/map.yaml:/map.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/map_server/map.pgm:/map.pgm
+  #     - $HOME/gobbit/docker_ros_nodes/map_server/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   ros-move-base:
     image: frankjoshua/ros-move-base

@@ -9,4 +9,4 @@ laser_scan_sensor:
   topic: scan
   marking: true
   clearing: true
-#depth_scan_sensor: {sensor_frame: laser, data_type: LaserScan, topic: /depth_scan, marking: true, clearing: true}
+depth_scan_sensor: {sensor_frame: laser, data_type: LaserScan, topic: /depth_scan, marking: true, clearing: true}
