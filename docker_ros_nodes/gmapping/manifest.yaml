@@ -1,12 +1,12 @@
 image: frankjoshua/ros-gmapping
 manifests:
   -
-    image: frankjoshua/ros-gmapping:armhf
-    platform:
-      architecture: arm
-      os: linux
-  -
     image: frankjoshua/ros-gmapping:amd64
     platform:
       architecture: amd64
+      os: linux
+  -
+    image: frankjoshua/ros-gmapping:armhf
+    platform:
+      architecture: arm
       os: linux
