@@ -6,8 +6,13 @@ COLOR2='\033[1;34m'
 NO_COLOR='\033[0;0m'
 echo ""
 echo -e $COLOR
+#Get ip from active internet connection
+device_ip=$(ip route get 8.8.8.8 | awk '/8.8.8.8/ {print $NF}')
 #Get ip from wireless
-device_ip=$(ifconfig wlan0 | grep 'inet addr' | cut -d: -f2 | awk '{print $1}')
+if [ -z "$device_ip" ]
+then
+  device_ip=$(ifconfig wlan0 | grep 'inet addr' | cut -d: -f2 | awk '{print $1}')
+fi
 #If not found set from ethernet
 if [ -z "$device_ip" ]
 then
