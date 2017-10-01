@@ -65,7 +65,7 @@ services:
     image: frankjoshua/ros-map-server
     volumes:
       - $HOME/gobbit/docker_ros_nodes/map_server/map.yaml:/map.yaml
-      - $HOME/gobbit/docker_ros_nodes/map_server/map.pgm:/map.pgm
+      - $HOME/gobbit/docker_ros_nodes/map_server/map.pgm:/map.512.png
       - $HOME/gobbit/docker_ros_nodes/map_server/ros.launch:/ros.launch
     env_file:
       - ros.env
