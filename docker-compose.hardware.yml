@@ -1,0 +1,66 @@
+version: '2'
+services:
+   ros-arduino-serial:
+     image: frankjoshua/ros-arduino-serial
+     env_file:
+       - ros.env
+     privileged: true
+     network_mode: "host"
+     volumes:
+       - /dev/ttyACM0:/dev/arduino_motor
+     restart: unless-stopped
+
+  # ros-xv-11-laser:
+  #   image: frankjoshua/docker_ros_xv_11
+  #   devices:
+  #     - "/dev/ttyACM0:/dev/laser_port"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+
+  # ros-ultimate-hat-node:
+  #   image: frankjoshua/ros-rpi-ultimate-hat-node
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   volumes:
+  #     - "$HOME/gobbit/ultimate_hat_node/node.py:/node.py"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+
+  # ros-linedog:
+  #   image: frankjoshua/ros-rpi-linedog-node
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   volumes:
+  #     - "/home/pirate/gobbit/linedog_node/node.py:/node.py"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+
+  # ros-oled-display:
+  #   image: frankjoshua/ros-rpi-oled-display
+  #   cap_add:
+  #     - SYS_RAWIO
+  #   devices:
+  #     - "/dev/mem:/dev/mem"
+  #     - "/lib/modules:/lib/modules"
+  #     - "/dev/i2c-1:/dev/i2c-1"
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
