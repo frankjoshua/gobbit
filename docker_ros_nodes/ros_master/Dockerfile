@@ -1,4 +1,4 @@
 #FROM esteve/ros:kinetic-robot-armhf
-FROM ros:kinetic-robot
+FROM ros:lunar-robot
 
 CMD ["roscore"]
