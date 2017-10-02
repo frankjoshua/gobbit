@@ -5,6 +5,6 @@ RUN apt-get update -y && \
 
 WORKDIR /
 COPY ./ros.launch /
-COPY ./map.yaml /
-COPY ./map.pgm /
+COPY ./map.512.png /
+COPY ./map.2048.pgm /
 CMD ["roslaunch", "--wait", "ros.launch"]
