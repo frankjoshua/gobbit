@@ -12,13 +12,14 @@ import atexit
 from pid_controller.pid import PID
 
 #Current destination
-destination = NavSatFix()
+currentWayPoint = 0
+destination = []
 #Last location
 lastFix = NavSatFix()
 #Current Heading
 currentHeading = 0
 #PID controller for stearing
-pid = PID(p=0.002, i=0.0, d=0.0)
+pid = PID(p=0.006, i=0.0, d=0.0)
 
 #Motor controller topic
 motorPub = rospy.Publisher('/pocketbot/cmd_vel', Twist, queue_size=1)
@@ -75,20 +76,33 @@ def getDirection(current, destination):
     return bearing
 
 def driveRobot(kmToWaypoint, error, setPoint, point):
+    global currentWayPoint
     #Send command to robot
     drive = Twist()
-    if kmToWaypoint > error:
+    #if abs(point - setPoint) > 4: 
+    if kmToWaypoint > error / 2:
         #Drive forward
-        drive.linear.x = error
+        drive.linear.x = 0.5
     else:
         #Stop
         drive.linear.x = 0.0
+        #Set next waypoint
+        currentWayPoint += 1
     
-    pid.target = setPoint    
+    #Correct for 360 degree wrap
+    if point - setPoint < -180:
+        point += 360
+    elif point - setPoint > 180:
+        point -= 360
+    #Update the set point on the PID    
+    pid.target = setPoint
+    #Get the turn rate from the PID
     output = pid(feedback=point)
-    drive.angular.y = setPoint
-    drive.angular.x = point
     drive.angular.z = output
+    #Debugging output
+    drive.linear.y = point - setPoint
+    drive.angular.x = point
+    drive.angular.y = setPoint
     #Publish Twist command    
     motorPub.publish(drive)
 
@@ -98,9 +112,9 @@ def gps(navsat):
     lastFix = navsat
 
 def waypoint(navsat):
-    #Save destination
     global destination
-    destination = navsat
+    #Save destination
+    destination.append(navsat)
     
 def heading(newHeading):
     #save heading
@@ -108,16 +122,21 @@ def heading(newHeading):
     currentHeading = newHeading.data
     
 def publishUpdates():
-    global lastFix, destination, currentHeading
-    #Get distance to destination
-    distance = getDistance(lastFix, destination)
-    distancePub.publish(distance)
-    #Get direction of destination
-    direction = getDirection(lastFix, destination)
-    directionPub.publish(direction)
-    #Drive robot
-    errorInKilometers = lastFix.position_covariance[0] / 1000
-    driveRobot(distance, errorInKilometers, direction, currentHeading)
+    global destination
+    #Make sure there are waypoints
+    if len(destination) > 0 and currentWayPoint < len(destination):
+        global lastFix, currentHeading
+        #Get distance to destination
+        distance = getDistance(lastFix, destination[currentWayPoint])
+        distancePub.publish(distance)
+        #Get direction of destination
+        direction = getDirection(lastFix, destination[currentWayPoint])
+        directionPub.publish(direction)
+        #Drive robot
+        errorInKilometers = lastFix.position_covariance[0] / 1000
+        driveRobot(distance, errorInKilometers, direction, currentHeading)
+    else:
+        motorPub.publish(Twist())
 
 def listener():
     rospy.init_node('gps_nav', anonymous=False)
