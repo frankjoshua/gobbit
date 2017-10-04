@@ -34,20 +34,20 @@ atexit.register(cleanup)
 
 def haversine(lon1, lat1, lon2, lat2):
     """
-    Calculate the great circle distance between two points 
+    Calculate the great circle distance between two points
     on the earth (specified in decimal degrees)
     """
-    # convert decimal degrees to radians 
+    # convert decimal degrees to radians
     lon1, lat1, lon2, lat2 = map(radians, [lon1, lat1, lon2, lat2])
 
-    # haversine formula 
-    dlon = lon2 - lon1 
-    dlat = lat2 - lat1 
+    # haversine formula
+    dlon = lon2 - lon1
+    dlat = lat2 - lat1
     a = sin(dlat/2)**2 + cos(lat1) * cos(lat2) * sin(dlon/2)**2
-    c = 2 * asin(sqrt(a)) 
+    c = 2 * asin(sqrt(a))
     r = 6371 # Radius of earth in kilometers. Use 3956 for miles
     return c * r
-    
+
 def getDistance(navsat, destination):
     #return distance between 2 points
     lat1 = navsat.latitude
@@ -56,7 +56,7 @@ def getDistance(navsat, destination):
     lon2 = destination.longitude
 
     return haversine(lon1, lat1, lon2, lat2)
-    
+
 def getDirection(current, destination):
     #return direction for current location to destination
     startLat = radians(destination.latitude)
@@ -79,7 +79,7 @@ def driveRobot(kmToWaypoint, error, setPoint, point):
     global currentWayPoint
     #Send command to robot
     drive = Twist()
-    #if abs(point - setPoint) > 4: 
+    #if abs(point - setPoint) > 4:
     if kmToWaypoint > error / 2:
         #Drive forward
         drive.linear.x = 0.5
@@ -88,22 +88,23 @@ def driveRobot(kmToWaypoint, error, setPoint, point):
         drive.linear.x = 0.0
         #Set next waypoint
         currentWayPoint += 1
-    
+
     #Correct for 360 degree wrap
     if point - setPoint < -180:
         point += 360
     elif point - setPoint > 180:
         point -= 360
-    #Update the set point on the PID    
+    #Update the set point on the PID
     pid.target = setPoint
     #Get the turn rate from the PID
     output = pid(feedback=point)
     drive.angular.z = output
     #Debugging output
-    drive.linear.y = point - setPoint
+    drive.linear.z = kmToWaypoint
+    drive.linear.y = error
     drive.angular.x = point
     drive.angular.y = setPoint
-    #Publish Twist command    
+    #Publish Twist command
     motorPub.publish(drive)
 
 def gps(navsat):
@@ -115,12 +116,12 @@ def waypoint(navsat):
     global destination
     #Save destination
     destination.append(navsat)
-    
+
 def heading(newHeading):
     #save heading
     global currentHeading
     currentHeading = newHeading.data
-    
+
 def publishUpdates():
     global destination
     #Make sure there are waypoints
@@ -146,9 +147,9 @@ def listener():
     rospy.Subscriber('/pocketbot/waypoint', NavSatFix, waypoint, queue_size=1)
     #Listen for heading updates
     rospy.Subscriber('/pocketbot/heading', Float32, heading, queue_size=1)
-    
+
     print "GPS Nav Loaded..."
-    
+
     rate = rospy.Rate(10) # 10hz
     while not rospy.is_shutdown():
         publishUpdates()

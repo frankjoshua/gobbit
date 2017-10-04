@@ -11,7 +11,7 @@ RUN apt-get update && apt-get upgrade -y &&\
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 
-CMD ["/bin/bash", "-C", "python", "/node.py", ";", "/bin/bash"]
+CMD ["python", "/node.py"]
 #Run as root to get permission for /dev/i2c-1
 USER root
 
