@@ -1,7 +1,8 @@
-version: '2'
+version: '2.1'
 services:
    ros-arduino-serial:
-     image: frankjoshua/ros-arduino-serial
+     image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+     build: ./docker_ros_nodes/ros_arduino_serial
      env_file:
        - ros.env
      privileged: true
