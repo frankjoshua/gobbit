@@ -1,14 +1,14 @@
-version: '2'
+version: '2.1'
 services:
   ros-master:
-    image: frankjoshua/ros-master
+    image: "frankjoshua/ros-master:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros_master
     ports:
       - "11311:11311"
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
-  #  command: bash -c "roscore && rosparm set use_sim_time true && fg"
 
   # web-server:
   #   image: schoeffm/rpi-nginx-php5
@@ -35,7 +35,8 @@ services:
 #    restart: unless-stopped
 
   ros-gobbit-description:
-    image: frankjoshua/ros-gobbit-description
+    image: "frankjoshua/ros-gobbit-description:${ARCH:-latest}"
+    build: ./docker_ros_nodes/description
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/gobbit/docker_ros_nodes/description/model.urdf.xacro:/model.urdf.xacro
@@ -46,7 +47,8 @@ services:
     restart: unless-stopped
 
   ros-diff-drive:
-    image: frankjoshua/ros-diff-drive
+    image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros_master
     volumes:
       - $HOME/gobbit/docker_ros_nodes/ros_diff_drive/ros.launch:/ros.launch
     env_file:
@@ -55,7 +57,8 @@ services:
     restart: unless-stopped
 
   ros-gps-nav:
-    image: frankjoshua/ros-gps-nav-node
+    image: "frankjoshua/ros-gps-nav-node:${ARCH:-latest}"
+    build: ./docker_ros_nodes/gps_nav
     env_file:
       - ros.env
     volumes:
@@ -64,7 +67,8 @@ services:
     restart: unless-stopped
 
   ros-map-server:
-    image: frankjoshua/ros-map-server
+    image: "frankjoshua/ros-map-server:${ARCH:-latest}"
+    build: ./docker_ros_nodes/map_server
     volumes:
       - $HOME/gobbit/docker_ros_nodes/map_server/map.yaml:/map.yaml
       - $HOME/gobbit/docker_ros_nodes/map_server/map.2048.pgm:/map.2048.pgm
@@ -104,7 +108,8 @@ services:
   #   restart: unless-stopped
 
   ros-move-base:
-    image: frankjoshua/ros-move-base
+    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+    build: ./docker_ros_nodes/move_base
     env_file:
       - ros.env
     volumes:

@@ -10,3 +10,8 @@ manifests:
     platform:
       architecture: amd64
       os: linux
+  -
+    image: frankjoshua/ros-move-base:arm64
+    platform:
+      architecture: arm64
+      os: linux
