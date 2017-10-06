@@ -2,7 +2,7 @@ version: '2.1'
 services:
   ros-master:
     image: "frankjoshua/ros-master:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros_master
+    build: ./docker_ros_nodes/ros-master
     ports:
       - "11311:11311"
     env_file:
@@ -36,7 +36,7 @@ services:
 
   ros-gobbit-description:
     image: "frankjoshua/ros-gobbit-description:${ARCH:-latest}"
-    build: ./docker_ros_nodes/description
+    build: ./docker_ros_nodes/ros-gobbit-description
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - $HOME/gobbit/docker_ros_nodes/description/model.urdf.xacro:/model.urdf.xacro
@@ -48,7 +48,7 @@ services:
 
   ros-diff-drive:
     image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros_master
+    build: ./docker_ros_nodes/ros-diff-drive
     volumes:
       - $HOME/gobbit/docker_ros_nodes/ros_diff_drive/ros.launch:/ros.launch
     env_file:
@@ -58,7 +58,7 @@ services:
 
   ros-gps-nav:
     image: "frankjoshua/ros-gps-nav-node:${ARCH:-latest}"
-    build: ./docker_ros_nodes/gps_nav
+    build: ./docker_ros_nodes/ros-gps-nav-node
     env_file:
       - ros.env
     volumes:
@@ -68,7 +68,7 @@ services:
 
   ros-map-server:
     image: "frankjoshua/ros-map-server:${ARCH:-latest}"
-    build: ./docker_ros_nodes/map_server
+    build: ./docker_ros_nodes/ros-map-server
     volumes:
       - $HOME/gobbit/docker_ros_nodes/map_server/map.yaml:/map.yaml
       - $HOME/gobbit/docker_ros_nodes/map_server/map.2048.pgm:/map.2048.pgm
@@ -109,7 +109,7 @@ services:
 
   ros-move-base:
     image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-    build: ./docker_ros_nodes/move_base
+    build: ./docker_ros_nodes/ros-move-base
     env_file:
       - ros.env
     volumes:
