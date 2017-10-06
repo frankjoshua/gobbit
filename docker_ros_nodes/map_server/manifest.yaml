@@ -10,3 +10,8 @@ manifests:
     platform:
       architecture: amd64
       os: linux
+  -
+    image: frankjoshua/ros-map-server:arm64
+    platform:
+      architecture: arm64
+      os: linux
