@@ -11,21 +11,23 @@ services:
   #      - /dev/ttyACM0:/dev/arduino_motor
   #    restart: unless-stopped
 
-  ros-xv-11-laser:
-    image: "frankjoshua/docker_ros_xv_11:${ARCH:-latest}"
-    build: ./docker_ros_nodes/docker_ros_xv_11
-    devices:
-      - "/dev/ttyACM0:/dev/laser_port"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+#  ros-xv-11-laser:
+#    image: "frankjoshua/docker_ros_xv_11:${ARCH:-latest}"
+#    build: ./docker_ros_nodes/docker_ros_xv_11
+#    devices:
+#      - "/dev/ttyACM0:/dev/laser_port"
+#    env_file:
+#      - ros.env
+#    network_mode: "host"
+#    restart: unless-stopped
 
   ros-hokuyo-laser:
     image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
     build: ./docker_ros_nodes/ros-hokuyo-laser
     devices:
-      - "/dev/ttyACM0:/dev/hokuyo"
+      - "/dev/ttyACM0:/dev/ttyACM0"
+    volumes:
+      - "$HOME/gobbit/docker_ros_nodes/ros-hokuyo-laser/ros.launch:/ros.launch"
     env_file:
       - ros.env
     network_mode: "host"
