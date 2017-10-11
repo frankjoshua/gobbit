@@ -21,6 +21,16 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  ros-hokuyo-laser:
+    image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hokuyo-laser
+    devices:
+      - "/dev/ttyACM0:/dev/hokuyo"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
   # ros-ultimate-hat-node:
   #   image: frankjoshua/ros-rpi-ultimate-hat-node
   #   cap_add:
