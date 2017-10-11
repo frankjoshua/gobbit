@@ -1,24 +1,25 @@
 version: '2.1'
 services:
-   ros-arduino-serial:
-     image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
-     build: ./docker_ros_nodes/ros_arduino_serial
-     env_file:
-       - ros.env
-     privileged: true
-     network_mode: "host"
-     volumes:
-       - /dev/ttyACM0:/dev/arduino_motor
-     restart: unless-stopped
+  #  ros-arduino-serial:
+  #    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+  #    build: ./docker_ros_nodes/ros_arduino_serial
+  #    env_file:
+  #      - ros.env
+  #    privileged: true
+  #    network_mode: "host"
+  #    volumes:
+  #      - /dev/ttyACM0:/dev/arduino_motor
+  #    restart: unless-stopped
 
-  # ros-xv-11-laser:
-  #   image: frankjoshua/docker_ros_xv_11
-  #   devices:
-  #     - "/dev/ttyACM0:/dev/laser_port"
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-xv-11-laser:
+    image: "frankjoshua/docker_ros_xv_11:${ARCH:-latest}"
+    build: ./docker_ros_nodes/docker_ros_xv_11
+    devices:
+      - "/dev/ttyACM0:/dev/laser_port"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
   # ros-ultimate-hat-node:
   #   image: frankjoshua/ros-rpi-ultimate-hat-node

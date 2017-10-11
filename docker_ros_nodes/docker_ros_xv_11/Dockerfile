@@ -1,4 +1,4 @@
-FROM esteve/ros:kinetic-desktop-armhf
+FROM ros:kinetic-robot
 
 #install xv_11 ros node
 RUN apt-get update && apt-get upgrade -y &&\
