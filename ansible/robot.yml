@@ -1,0 +1,47 @@
+---
+- hosts: robot
+  tasks:
+
+  - name: Install Git repo with robot softare
+    git:
+      repo: https://github.com/frankjoshua/gobbit.git
+      dest: /home/pirate/gobbit
+      accept_hostkey: True
+      ssh_opts: -o StrictHostKeyChecking=no
+    become: no
+
+  - name: Start Cloud 9 IDE
+    docker_container:
+      name: c9-ide
+      image: hwegge2/rpi-cloud9-ide
+      state: started
+      restart_policy: always
+      command: "node server.js -w/workspace --listen 0.0.0.0 -a :"
+      ports:
+        - "8181:8181"
+      volumes:
+        - "/home/pirate/gobbit:/workspace"
+
+- hosts: pi3
+  tasks:
+
+  - name: Run setup script for I2C
+    shell: /home/pirate/gobbit/setup.sh
+    become: yes
+    ignore_errors: yes
+
+  - name: Fix Hypriot 1.5 bug Step 1
+    apt:
+      name: python-pip
+      state: absent
+    become: yes
+  - name: Fix Hypriot 1.5 bug Step 2
+    easy_install:
+      name: pip
+      state: latest
+    become: yes
+  - name: Fix Hypriot 1.5 bug step 3
+    pip:
+      name: docker
+      version: 2.4.2
+    become: yes
