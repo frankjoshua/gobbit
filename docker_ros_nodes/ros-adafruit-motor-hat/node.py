@@ -19,33 +19,45 @@ rrMotor = mh.getMotor(4)
 
 	
 def driveMotors(msg):
+    strafe = msg.linear.y
     dx = msg.linear.x
     dr = msg.angular.z
     w = 1.0
-    right = 1.0 * dx + dr * w / 2
-    left = 1.0 * dx - dr * w / 2
-    leftPower = constrain(left,-1.0,1.0)
-    rightPower = constrain(right,-1.0,1.0)
-    if(leftPower < 0):
+    rightFront = 1.0 * dx + dr * w / 2 - strafe
+    leftFront = 1.0 * dx - dr * w / 2 + strafe
+    rightRear = 1.0 * dx + dr * w / 2 + strafe
+    leftRear = 1.0 * dx - dr * w / 2 - strafe
+    
+    leftFrontPower = constrain(leftFront,-1.0,1.0)
+    rightFrontPower = constrain(rightFront,-1.0,1.0)
+    leftRearPower = constrain(leftRear,-1.0,1.0)
+    rightRearPower = constrain(rightRear,-1.0,1.0)
+    if(leftFrontPower < 0):
         lfMotor.run(Adafruit_MotorHAT.BACKWARD)
-        lrMotor.run(Adafruit_MotorHAT.BACKWARD)
     else:
         lfMotor.run(Adafruit_MotorHAT.FORWARD)
-        lrMotor.run(Adafruit_MotorHAT.FORWARD)
-    if(rightPower < 0):
+    if(rightFrontPower < 0):
         rfMotor.run(Adafruit_MotorHAT.BACKWARD)
-        rrMotor.run(Adafruit_MotorHAT.BACKWARD)
     else:
         rfMotor.run(Adafruit_MotorHAT.FORWARD)
+    if(leftRearPower < 0):
+        lrMotor.run(Adafruit_MotorHAT.BACKWARD)
+    else:
+        lrMotor.run(Adafruit_MotorHAT.FORWARD)
+    if(rightRearPower < 0):
+        rrMotor.run(Adafruit_MotorHAT.BACKWARD)
+    else:
         rrMotor.run(Adafruit_MotorHAT.FORWARD)
 
-    finalRightPower = int(abs(rightPower) * 255)
-    finalLeftPower = int(abs(leftPower) * 255)
+    finalRightFrontPower = int(abs(rightFrontPower) * 255)
+    finalLeftFrontPower = int(abs(leftFrontPower) * 255)
+    finalRightRearPower = int(abs(rightRearPower) * 255)
+    finalLeftRearPower = int(abs(leftRearPower) * 255)
 
-    lfMotor.setSpeed(finalLeftPower)
-    lrMotor.setSpeed(finalLeftPower)
-    rfMotor.setSpeed(finalRightPower)
-    rrMotor.setSpeed(finalRightPower)	
+    lfMotor.setSpeed(finalLeftFrontPower)
+    lrMotor.setSpeed(finalLeftRearPower)
+    rfMotor.setSpeed(finalRightFrontPower)
+    rrMotor.setSpeed(finalRightRearPower)	
 
 lastControl = time.time()
 

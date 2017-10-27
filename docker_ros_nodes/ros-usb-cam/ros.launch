@@ -4,6 +4,6 @@
       <param name="device" value="/dev/video0" />
       <param name="width" value="320" />
       <param name="height" value="240" />
-      <param name="fps" value="30" />
+      <param name="fps" value="40" />
   </node>
 </launch>
