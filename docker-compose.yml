@@ -60,7 +60,7 @@ services:
     image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
     build: ./docker_ros_nodes/ros-opencv-line
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
     env_file:
       - ros.env
     network_mode: "host"

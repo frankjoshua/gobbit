@@ -85,7 +85,7 @@ class OpenCVLineDetector:
 
         #Turn so the line is vertical, slope == -PI/2
         slopeErr = -math.pi/2 - slope
-        print(str.format('{0:.6f}', slopeErr))
+        #print(str.format('{0:.6f}', slopeErr))
         self.cmd.angular.z = float(slopeErr) / 2 #2
         self.cmd.linear.y = float(errB) / 250 #250
 
