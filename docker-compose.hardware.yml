@@ -33,14 +33,27 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  ros-usb-cam:
-    image: frankjoshua/ros-usb-cam
-    build: ./docker_ros_nodes/ros-usb-cam
+  # ros-usb-cam:
+  #   image: frankjoshua/ros-usb-cam
+  #   build: ./docker_ros_nodes/ros-usb-cam
+  #   devices:
+  #     - "/dev/video0:/dev/video0"
+  #   privileged: true
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-usb-cam/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+
+  ros-rpi-cam-v1:
+    image: frankjoshua/ros-rpi-cam-v1
+    build: ./docker_ros_nodes/ros-rpi-cam-v1
     devices:
       - "/dev/video0:/dev/video0"
     privileged: true
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-usb-cam/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-rpi-cam-v1/ros.launch:/ros.launch
     env_file:
       - ros.env
     network_mode: "host"
