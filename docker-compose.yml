@@ -10,22 +10,22 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  # web-server:
-  #   image: schoeffm/rpi-nginx-php5
-  #   network_mode: "host"
-  #   privileged: true
-  #   restart: unless-stopped
-  #   volumes:
-  #     - $HOME/gobbit/blockly:/usr/share/nginx/www
+  web-server:
+    image: schoeffm/rpi-nginx-php5
+    network_mode: "host"
+    privileged: true
+    restart: unless-stopped
+    volumes:
+      - $HOME/gobbit/blockly:/usr/share/nginx/www
 
-  # ros-rosbridge-server:
-  #   image: frankjoshua/ros-rpi-rosbridge-server
-  #   ports:
-  #     - "9090:9090"
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-rosbridge-server:
+    image: frankjoshua/ros-rpi-rosbridge-server
+    ports:
+      - "9090:9090"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
 #  ros-web-video-server:
 #    image: frankjoshua/ros-rpi-web-video-server
@@ -56,15 +56,15 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-opencv-line:
-    image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-opencv-line
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-opencv-line:
+  #   image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-opencv-line
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   # ros-gps-nav:
   #   image: "frankjoshua/ros-gps-nav-node:${ARCH:-latest}"
@@ -150,16 +150,6 @@ services:
   #   restart: always
   #   volumes:
   #     - /home/pirate/gobbit/blockly/combined_code.py:/usr/share/nginx/www
-
-  # ros-usb-cam:
-  #   image: frankjoshua/ros-rpi-usb-cam
-  #   devices:
-  #     - "/dev/video0:/dev/video0"
-  #   privileged: true
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
 
   # ui:
   #   image: portainer/portainer:arm

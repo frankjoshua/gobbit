@@ -92,7 +92,8 @@ class OpenCVLineDetector:
         #Display results
         cv2.circle(output, (cxT, cyT), 10, (255,0,0), -1)
         cv2.circle(output, (cxB, cyB), 10, (0,0,255), -1)
-        imageToPub = self.bridge.cv2_to_imgmsg(numpy.hstack([cv_image,output]), encoding="passthrough")
+        #imageToPub = self.bridge.cv2_to_compressed_imgmsg(numpy.array(output))
+        imageToPub = self.bridge.cv2_to_imgmsg(output, encoding="bgr8")
         self.imageOut.publish(imageToPub)
         # cv2.imshow("window", numpy.hstack([cv_image,output]))
         # cv2.waitKey(3)
