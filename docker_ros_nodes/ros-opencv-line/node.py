@@ -121,11 +121,11 @@ class OpenCVLineDetector:
         self.setCommand(zError = slopeErr, yError = errB)
         self.pub.publish(self.cmd)
 
-        cv2.imshow("window", numpy.hstack([hsv,output]))
-        cv2.waitKey(1)
-        #imageToPub = self.bridge.cv2_to_compressed_imgmsg(numpy.array(output))
-        #imageToPub = self.bridge.cv2_to_imgmsg(output, encoding="bgr8")
-        #self.imageOut.publish(imageToPub)
+        #cv2.imshow("window", numpy.hstack([hsv,output]))
+        #cv2.waitKey(1)
+        imageToPub = self.bridge.cv2_to_compressed_imgmsg(numpy.array(output))
+        imageToPub = self.bridge.cv2_to_imgmsg(output, encoding="bgr8")
+        self.imageOut.publish(imageToPub)
 
     def setCommand(self, zError, yError):
         self.pid.update( feedback_value = -zError )

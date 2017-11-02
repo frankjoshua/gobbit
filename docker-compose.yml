@@ -56,15 +56,15 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  # ros-opencv-line:
-  #   image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-opencv-line
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-opencv-line:
+    image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-opencv-line
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
   # ros-gps-nav:
   #   image: "frankjoshua/ros-gps-nav-node:${ARCH:-latest}"
