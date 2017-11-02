@@ -18,13 +18,13 @@ class OpenCVLineDetector:
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.imageOut = rospy.Publisher('/line/image_raw', Image, queue_size=1)
         self.cmd = Twist()
-        P=0.5
+        P=0.8
         I=0.002
-        D=0.1
+        D=0.03
         self.pid = PID(P, I, D)
         self.pid.SetPoint = 0.0
-        P=0.008
-        I=0.000002
+        P=0.007
+        I=0.00002
         D=0.001
         self.pidStrafe = PID(P, I, D)
         self.pidStrafe.SetPoint = 0.0
