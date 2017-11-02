@@ -23,10 +23,10 @@ def driveMotors(msg):
     dx = msg.linear.x
     dr = msg.angular.z
     w = 1.0
-    rightFront = 1.0 * dx + dr * w / 2 - strafe
-    leftFront = 1.0 * dx - dr * w / 2 + strafe
-    rightRear = 1.0 * dx + dr * w / 2 + strafe
-    leftRear = 1.0 * dx - dr * w / 2 - strafe
+    rightFront = dx + dr * w - strafe
+    rightRear  = dx + dr * w + strafe
+    leftFront  = dx - dr * w + strafe
+    leftRear   = dx - dr * w - strafe
     
     leftFrontPower = constrain(leftFront,-1.0,1.0)
     rightFrontPower = constrain(rightFront,-1.0,1.0)
