@@ -18,14 +18,14 @@ class OpenCVLineDetector:
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.imageOut = rospy.Publisher('/line/image_raw', Image, queue_size=1)
         self.cmd = Twist()
-        P=0.4
-        I=0.1
-        D=0.000000001
+        P=0.5
+        I=0.002
+        D=0.1
         self.pid = PID(P, I, D)
         self.pid.SetPoint = 0.0
-        P=0.004
-        I=0.002
-        D=0.0000000001
+        P=0.008
+        I=0.000002
+        D=0.001
         self.pidStrafe = PID(P, I, D)
         self.pidStrafe.SetPoint = 0.0
         atexit.register(self.cleanup)
@@ -117,15 +117,15 @@ class OpenCVLineDetector:
         cv2.circle(output, (cxT, cyT), 10, (255,0,0), -1)
         cv2.circle(output, (cxB, cyB), 10, (0,0,255), -1)
 
-        #cv2.imshow("window", numpy.hstack([hsv,output]))
-        #cv2.waitKey(1)
         #Send command to robot
         self.setCommand(zError = slopeErr, yError = errB)
         self.pub.publish(self.cmd)
 
+        cv2.imshow("window", numpy.hstack([hsv,output]))
+        cv2.waitKey(1)
         #imageToPub = self.bridge.cv2_to_compressed_imgmsg(numpy.array(output))
-        imageToPub = self.bridge.cv2_to_imgmsg(output, encoding="bgr8")
-        self.imageOut.publish(imageToPub)
+        #imageToPub = self.bridge.cv2_to_imgmsg(output, encoding="bgr8")
+        #self.imageOut.publish(imageToPub)
 
     def setCommand(self, zError, yError):
         self.pid.update( feedback_value = -zError )
@@ -133,7 +133,10 @@ class OpenCVLineDetector:
         #self.cmd.angular.z = float(zError) / 4  #2
         self.cmd.angular.z = self.pid.output
         self.cmd.linear.y = self.pidStrafe.output  #float(yError) / 500 #250
-        self.cmd.linear.x = 0.06  #0.1
+        if abs(self.cmd.angular.z) > 0.05 or abs(self.cmd.linear.y) > 0.05:
+            self.cmd.linear.x = 0.2  #0.1
+        else:
+            self.cmd.linear.x = 0.2  # 0.1
         #self.cmd.linear.x = max(0.01, 0.2 - abs(self.cmd.linear.y) - abs(self.cmd.angular.z))#0.25
 
     def contours(self, mask, output):
