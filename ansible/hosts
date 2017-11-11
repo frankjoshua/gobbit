@@ -1,0 +1,5 @@
+[robot]
+black-pearl.local ansible_user=pirate ansible_ssh_pass=hypriot
+
+[pi3]
+black-pearl.local ansible_user=pirate ansible_ssh_pass=hypriot
