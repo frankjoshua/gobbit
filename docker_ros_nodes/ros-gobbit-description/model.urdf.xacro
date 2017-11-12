@@ -77,6 +77,29 @@
                ixy="0" ixz="0" iyz="0"/>
     </inertial>
   </link>
+  
+  <joint name="camera_joint" type="fixed">
+    <axis xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="camera_link"/>
+    <origin rpy="0 0 0.0" xyz="0 0 ${laser_size * 2}"/>
+  </joint>
+
+  <link name="camera_link">
+    <visual>
+      <geometry>
+        <box size="${laser_size} ${laser_size} ${laser_size}"/>
+      </geometry>
+      <material name="green">
+	      <color rgba="0.1 0.8 0.1 1"/>
+	    </material>
+    </visual>
+    <inertial>
+      <mass value="0.01"/>
+      <inertia ixx="0.001" iyy="0.001" izz="0.001"
+               ixy="0" ixz="0" iyz="0"/>
+    </inertial>
+  </link>
 
   <link name="wheel_right">
       <visual>

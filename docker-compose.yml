@@ -46,25 +46,25 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  ros-diff-drive:
-    image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-diff-drive
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-diff-drive/ros.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-diff-drive:
+  #   image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-diff-drive
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-diff-drive/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  ros-opencv-line:
-    image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-opencv-line
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-opencv-line:
+  #   image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-opencv-line
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   # ros-gps-nav:
   #   image: "frankjoshua/ros-gps-nav-node:${ARCH:-latest}"
@@ -98,15 +98,15 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  # ros-hector-mapping:
-  #   image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-hector-mapping
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-hector-mapping:
+    image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hector-mapping
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
   # ros-robot-localization:
   #   image: frankjoshua/ros-robot-localization
@@ -118,19 +118,19 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  # ros-move-base:
-  #   image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-move-base
-  #   env_file:
-  #     - ros.env
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-move-base:
+    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-move-base
+    env_file:
+      - ros.env
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
+    network_mode: "host"
+    restart: unless-stopped
 
   # ros-line-follower:
   #   image: frankjoshua/ros-rpi-line-follower
