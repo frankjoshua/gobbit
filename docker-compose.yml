@@ -98,15 +98,37 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  ros-hector-mapping:
-    image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-hector-mapping
+  # ros-hector-mapping:
+  #   image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-hector-mapping
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+  
+  # ros-rtab-map:
+  #   image: "frankjoshua/ros-rtab-map:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-rtab-map
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-rtab-map/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+    
+  ros-cartographer:
+    image: "frankjoshua/ros-cartographer:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-cartographer
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-cartographer/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-cartographer/settings.lua:/settings.lua
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
+
 
   # ros-robot-localization:
   #   image: frankjoshua/ros-robot-localization
