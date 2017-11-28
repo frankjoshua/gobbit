@@ -1,5 +1,5 @@
 local_costmap:
-  global_frame: odom
+  global_frame: base_link
   rolling_window: true
   static_map: false
   update_frequency: 4.0

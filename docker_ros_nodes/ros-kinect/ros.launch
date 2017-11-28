@@ -1,0 +1,7 @@
+<launch>
+  <!-- Start Kinect -->
+  <include file="$(find freenect_launch)/launch/freenect.launch">"
+    <arg name="camera" value="camera"/>
+    <arg name="depth_registration" value="true"/>
+  </include>
+</launch>
