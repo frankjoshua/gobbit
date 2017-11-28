@@ -45,6 +45,7 @@ services:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
+    command: rosrun uvc_camera uvc_camera_node _width:=160 _height:=120 _fps:=30
 
 #  ros-rpi-cam-v1:
 #    image: frankjoshua/ros-rpi-cam-v1

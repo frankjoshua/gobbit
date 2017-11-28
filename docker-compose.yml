@@ -10,22 +10,22 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
-  web-server:
-    image: schoeffm/rpi-nginx-php5
-    network_mode: "host"
-    privileged: true
-    restart: unless-stopped
-    volumes:
-      - $HOME/gobbit/blockly:/usr/share/nginx/www
+  # web-server:
+  #   image: schoeffm/rpi-nginx-php5
+  #   network_mode: "host"
+  #   privileged: true
+  #   restart: unless-stopped
+  #   volumes:
+  #     - $HOME/gobbit/blockly:/usr/share/nginx/www
 
-  ros-rosbridge-server:
-    image: frankjoshua/ros-rpi-rosbridge-server
-    ports:
-      - "9090:9090"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-rosbridge-server:
+  #   image: frankjoshua/ros-rpi-rosbridge-server
+  #   ports:
+  #     - "9090:9090"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
 #  ros-web-video-server:
 #    image: frankjoshua/ros-rpi-web-video-server
@@ -34,27 +34,27 @@ services:
 #    network_mode: "host"
 #    restart: unless-stopped
 
-  ros-gobbit-description:
-    image: "frankjoshua/ros-gobbit-description:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-gobbit-description
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $HOME/gobbit/docker_ros_nodes/ros-gobbit-description/model.urdf.xacro:/model.urdf.xacro
-      - $HOME/gobbit/docker_ros_nodes/ros-gobbit-description/description.launch:/description.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-gobbit-description:
+  #   image: "frankjoshua/ros-gobbit-description:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-gobbit-description
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - $HOME/gobbit/docker_ros_nodes/ros-gobbit-description/model.urdf.xacro:/model.urdf.xacro
+  #     - $HOME/gobbit/docker_ros_nodes/ros-gobbit-description/description.launch:/description.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
-  ros-diff-drive:
-    image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-diff-drive
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-diff-drive/ros.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-diff-drive:
+  #   image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-diff-drive
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-diff-drive/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   ros-opencv-line:
     image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
