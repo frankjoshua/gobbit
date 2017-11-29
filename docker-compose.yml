@@ -1,5 +1,8 @@
 version: '2.1'
 services:
+
+############################ ALL ############################
+
   ros-master:
     image: "frankjoshua/ros-master:${ARCH:-latest}"
     build: ./docker_ros_nodes/ros-master
@@ -56,16 +59,6 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  # ros-opencv-line:
-  #   image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-opencv-line
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
-
   # ros-gps-nav:
   #   image: "frankjoshua/ros-gps-nav-node:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros-gps-nav-node
@@ -75,6 +68,10 @@ services:
   #     - $HOME/gobbit/docker_ros_nodes/ros-gps-nav-node/node.py:/node.py
   #   network_mode: "host"
   #   restart: unless-stopped
+
+
+
+############################ MAPPING ############################
 
   # ros-map-server:
   #   image: "frankjoshua/ros-map-server:${ARCH:-latest}"
@@ -97,7 +94,7 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-
+  
   # ros-hector-mapping:
   #   image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros-hector-mapping
@@ -118,17 +115,16 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
     
-  ros-cartographer:
-    image: "frankjoshua/ros-cartographer:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-cartographer
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-cartographer/ros.launch:/ros.launch
-      - $HOME/gobbit/docker_ros_nodes/ros-cartographer/settings.lua:/settings.lua
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
-
+  # ros-cartographer:
+  #   image: "frankjoshua/ros-cartographer:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-cartographer
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-cartographer/ros.launch:/ros.launch
+  #     - $HOME/gobbit/docker_ros_nodes/ros-cartographer/settings.lua:/settings.lua
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   # ros-robot-localization:
   #   image: frankjoshua/ros-robot-localization
@@ -140,26 +136,38 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  ros-move-base:
-    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-move-base
-    env_file:
-      - ros.env
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
-    network_mode: "host"
-    restart: unless-stopped
-
-  # ros-line-follower:
-  #   image: frankjoshua/ros-rpi-line-follower
+  # ros-move-base:
+  #   image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-move-base
   #   env_file:
   #     - ros.env
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
   #   network_mode: "host"
   #   restart: unless-stopped
+
+############################ LINE FOLLOWER ############################
+
+  ros-line-follower:
+    image: frankjoshua/ros-rpi-line-follower
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+    
+  ros-opencv-line:
+    image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-opencv-line
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-opencv-line/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
 
 

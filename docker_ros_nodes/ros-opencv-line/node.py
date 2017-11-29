@@ -14,7 +14,7 @@ class OpenCVLineDetector:
     def __init__(self):
         self.bridge = cv_bridge.CvBridge()
         #cv2.namedWindow("window", 1)
-        self.image_sub = rospy.Subscriber("/image_raw/compressed", CompressedImage, self.callback, queue_size=1)
+        self.image_sub = rospy.Subscriber("/raspicam_node/image/compressed", CompressedImage, self.callback, queue_size=1)
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.imageOut = rospy.Publisher('/line/image_raw', Image, queue_size=1)
         self.cmd = Twist()

@@ -1,9 +1,16 @@
 <launch>
-  <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="/map.yaml" />
+  <node type="raspicam_node" pkg="raspicam_node" name="raspicam_node" output="screen">
 
-  <!-- odom is 0,0,0 on the map -->
-  <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
-     args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom 100"/>
+    <param name="camera_info_url" value="package://raspicam_node/camera_info/camerav2_410x308.yaml"/>
+    <param name="width" value="120"/>
+    <param name="height" value="90"/>
+
+    <param name="framerate" value="90"/>
+<!--    <param name="exposure_mode" value="antishake"/> -->
+    <param name="shutter_speed" value="100"/> 
+
+    <param name="camera_frame_id" value="raspicam"/>
+
+  </node>
 
 </launch>
