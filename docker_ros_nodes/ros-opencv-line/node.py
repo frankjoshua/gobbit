@@ -12,26 +12,31 @@ import atexit
 class OpenCVLineDetector:
 
     def __init__(self):
+        self.speed = 0.01
         self.bridge = cv_bridge.CvBridge()
         #cv2.namedWindow("window", 1)
         self.image_sub = rospy.Subscriber("/raspicam_node/image/compressed", CompressedImage, self.callback, queue_size=1)
         self.pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
         self.imageOut = rospy.Publisher('/line/image_raw', Image, queue_size=1)
+        self.cmdSub = rospy.Subscriber("/pocketbot/cmd_vel", Twist, self.cmdCallback, queue_size=1)
         self.cmd = Twist()
         # P=0.4
         # I=0.002
         # D=0.03
-        P=0.8
+        P=0.25
         I=0.0
-        D=0 #0.1
+        D=0.0 #0.1
         self.pid = PID(P, I, D)
         self.pid.SetPoint = 0.0
         P=0.005
-        I=0.001
-        D=0 #0.0015
+        I=0.000
+        D=0.00 #0.0015
         self.pidStrafe = PID(P, I, D)
         self.pidStrafe.SetPoint = 0.0
         atexit.register(self.cleanup)
+        
+    def cmdCallback(self, msg):
+        self.speed = msg.linear.x * 0.25
 
     def cleanup(self):
         #Stop the robot
@@ -40,7 +45,7 @@ class OpenCVLineDetector:
     def bottom(self, hsv, mask):
         #limit search to bottom of image
         h, w, d = hsv.shape
-        search_top = 5*h/6
+        search_top = 8*h/10
         search_bot = h
         mask[0:search_top, 0:w] = 0
         mask[search_bot:h, 0:w] = 0
@@ -89,8 +94,8 @@ class OpenCVLineDetector:
         hsv = cv2.cvtColor(cv_image, cv2.COLOR_BGR2HSV)
 
         #filter out black
-        lower = numpy.array([0,190,0])
-        upper = numpy.array([180, 255, 90])
+        lower = numpy.array([0,45,0])
+        upper = numpy.array([180, 255, 100])
         mask = cv2.inRange(hsv, lower, upper)
         h, w, d = hsv.shape
         # mask[0:h, 0:0] = 0
@@ -103,17 +108,19 @@ class OpenCVLineDetector:
         width, cxT, cyT, contour = self.contours(mask.copy(), output)
         cxB, cyB, errB = self.bottom(hsv, mask.copy())
         #Display results
-        cv2.circle(output, (cxT, cyT), 10, (255,0,0), -1)
-        cv2.circle(output, (cxB, cyB), 10, (0,0,255), -1)
-        cv2.imshow("window", numpy.hstack([hsv,output]))
-        cv2.waitKey(1)
+        cv2.circle(output, (cxT, cyT), 4, (255,0,0), -1)
+        cv2.circle(output, (cxB, cyB), 4, (0,0,255), -1)
+        imageToPub = self.bridge.cv2_to_imgmsg(numpy.hstack([hsv,output]), encoding="bgr8")
+        self.imageOut.publish(imageToPub)
+        #cv2.imshow("window", numpy.hstack([hsv,output]))
+        #cv2.waitKey(1)
         #Check for error state
         if cxT == -1 or cxB == -1:
             self.cmd.angular.z = 0
             self.cmd.linear.y = 0
-            self.cmd.linear.x = 0
+            self.cmd.linear.x = self.speed
             if cxT > -1:
-                self.cmd.linear.x = 0.05
+                self.cmd.linear.x = self.speed
             if cxB > -1:
                 if cxB > w/2:
                     self.cmd.linear.y = 0.05
@@ -130,9 +137,7 @@ class OpenCVLineDetector:
         self.setCommand(zError = slopeErr, yError = errB, width = width)
         self.pub.publish(self.cmd)
 
-        #imageToPub = self.bridge.cv2_to_compressed_imgmsg(numpy.array(output))
-        imageToPub = self.bridge.cv2_to_imgmsg(output, encoding="bgr8")
-        self.imageOut.publish(imageToPub)
+
 
     def setCommand(self, zError, yError, width):
         #Update PID
@@ -140,23 +145,23 @@ class OpenCVLineDetector:
         self.pidStrafe.update( feedback_value = -yError )
         #Update command
         if width > 110:
-            self.cmd.linear.x = 0.1
+            self.cmd.linear.x = self.speed
             self.cmd.angular.z = 0
             self.cmd.linear.y = 0
         else:
             self.cmd.linear.y = self.pidStrafe.output
-            if abs(self.pidStrafe.output) > 0.1:
-                self.cmd.linear.x = 0.0
+            if abs(self.pidStrafe.output) > 1.15:
+                self.cmd.linear.x = self.speed
                 self.cmd.angular.z = 0.0
             else:
-                self.cmd.linear.x = 0.2
+                self.cmd.linear.x = self.speed
                 self.cmd.angular.z = self.pid.output
 
 
     def contours(self, mask, output):
         h, w, d = output.shape
-        search_top = 3*h/6
-        search_bot = 4*h/6
+        search_top = 4*h/10
+        search_bot = 7*h/10
         mask[0:search_top, 0:w] = 0
         mask[search_bot:h, 0:w] = 0
         ret, thresh = cv2.threshold(mask, 127, 255, 0)

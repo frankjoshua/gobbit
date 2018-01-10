@@ -152,12 +152,12 @@ services:
 
 ############################ LINE FOLLOWER ############################
 
-  ros-line-follower:
-    image: frankjoshua/ros-rpi-line-follower
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-line-follower:
+  #   image: frankjoshua/ros-rpi-line-follower
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
     
   ros-opencv-line:
     image: "frankjoshua/ros-opencv-line:${ARCH:-latest}"

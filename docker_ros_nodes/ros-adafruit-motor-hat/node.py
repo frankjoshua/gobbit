@@ -64,8 +64,8 @@ lastControl = time.time()
 def controlCallback(msg):
     global lastControl
     #Mark time of manual control
-    lastControl = time.time()
-    driveMotors(msg)
+    #lastControl = time.time()
+    #driveMotors(msg)
 
 def callback(msg):
     global lastControl
