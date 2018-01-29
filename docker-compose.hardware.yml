@@ -1,5 +1,41 @@
 version: '2.1'
 services:
+    
+############################ LINE FOLLOWER ############################
+
+  ros-rpi-cam-v1:
+    image: frankjoshua/ros-rpi-cam-v1
+    build: ./docker_ros_nodes/ros-rpi-cam-v1
+    devices:
+      - "/dev/video0:/dev/video0"
+    privileged: true
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-rpi-cam-v1/ros.launch:/ros.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+
+  ros-motor-hat:
+    image: frankjoshua/ros-adafruit-motor-hat
+    build: ./docker_ros_nodes/ros-adafruit-motor-hat
+    cap_add:
+      - SYS_RAWIO
+    devices:
+      - "/dev/i2c-1:/dev/i2c-1"
+      - "/lib/modules:/lib/modules"
+      - "/dev/mem:/dev/mem"
+    volumes:
+      - /home/pirate/gobbit:/home/pi/gobbit
+      - $HOME/gobbit/docker_ros_nodes/ros-adafruit-motor-hat/node.py:/node.py
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+    
+############################ EFIM ############################
+
   # ros-arduino-serial:
   #   image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros_arduino_serial
@@ -11,36 +47,28 @@ services:
   #     - /dev/ttyACM0:/dev/arduino_motor
   #   restart: unless-stopped
 
-#  ros-xv-11-laser:
-#    image: "frankjoshua/docker_ros_xv_11:${ARCH:-latest}"
-#    build: ./docker_ros_nodes/docker_ros_xv_11
-#    devices:
-#      - "/dev/ttyACM0:/dev/laser_port"
-#    env_file:
-#      - ros.env
-#    network_mode: "host"
-#    restart: unless-stopped
-
-  ros-hokuyo-laser:
-    image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-hokuyo-laser
-    devices:
-      - "/dev/ttyACM0:/dev/ttyACM0"
-    volumes:
-      - "$HOME/gobbit/docker_ros_nodes/ros-hokuyo-laser/ros.launch:/ros.launch"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-hokuyo-laser:
+  #   image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-hokuyo-laser
+  #   devices:
+  #     - "/dev/ttyACM0:/dev/ttyACM0"
+  #   volumes:
+  #     - "$HOME/gobbit/docker_ros_nodes/ros-hokuyo-laser/ros.launch:/ros.launch"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
     
-  ros-kinect:
-    image: "frankjoshua/ros-kinect:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-kinect
-    privileged: true
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-kinect:
+  #   image: "frankjoshua/ros-kinect:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-kinect
+  #   privileged: true
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+
+############################ OTHER ############################
 
   # ros-usb-cam:
   #   image: frankjoshua/ros-usb-cam
@@ -54,33 +82,13 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   restart: unless-stopped
-
-#  ros-rpi-cam-v1:
-#    image: frankjoshua/ros-rpi-cam-v1
-#    build: ./docker_ros_nodes/ros-rpi-cam-v1
-#    devices:
-#      - "/dev/video0:/dev/video0"
-#    privileged: true
-#    volumes:
-#      - $HOME/gobbit/docker_ros_nodes/ros-rpi-cam-v1/ros.launch:/ros.launch
-#    env_file:
-#      - ros.env
-#    network_mode: "host"
-#    restart: unless-stopped
-
-  # ros-motor-hat:
-  #   image: frankjoshua/ros-adafruit-motor-hat
-  #   build: ./docker_ros_nodes/ros-adafruit-motor-hat
-  #   cap_add:
-  #     - SYS_RAWIO
+  #   command: rosrun uvc_camera uvc_camera_node _width:=160 _height:=120 _fps:=30
+  
+  # ros-xv-11-laser:
+  #   image: "frankjoshua/docker_ros_xv_11:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/docker_ros_xv_11
   #   devices:
-  #     - "/dev/i2c-1:/dev/i2c-1"
-  #     - "/lib/modules:/lib/modules"
-  #     - "/dev/mem:/dev/mem"
-  #   volumes:
-  #     - /home/pirate/gobbit:/home/pi/gobbit
-  #     - $HOME/gobbit/docker_ros_nodes/ros-adafruit-motor-hat/node.py:/node.py
-  #   privileged: true
+  #     - "/dev/ttyACM0:/dev/laser_port"
   #   env_file:
   #     - ros.env
   #   network_mode: "host"
