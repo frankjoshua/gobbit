@@ -27,5 +27,6 @@ echo -e "${COLOR2}This is going to take a while......${NO_COLOR}"
 echo "#Created by script DO NOT EDIT" > ros.env
 echo "ROS_MASTER_URI=http://$device_ip:11311" >> ros.env
 echo "ROS_IP=$device_ip" >> ros.env
+export ARCH=$(dpkg --print-architecture)
 #docker-compose -f docker-compose.yml -f docker-compose.hardware.yml pull
 docker-compose -f docker-compose.yml -f docker-compose.hardware.yml up $@

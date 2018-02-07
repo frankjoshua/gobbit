@@ -1,7 +1,7 @@
-FROM ros:kinetic-robot
+FROM ros:kinetic-ros-base
 
 RUN apt-get update -y && \
-    apt-get install -y ros-kinetic-rtabmap-ros
+    apt-get install -y ros-$ROS_DISTRO-rtabmap-ros
 
 WORKDIR /
 CMD ["roslaunch", "--wait", "ros.launch"]

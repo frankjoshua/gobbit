@@ -7,8 +7,8 @@
       <param name="Grid/FromDepth" type="string" value="true"/>
       
 
-      <!--<remap from="odom" to="/scanmatch_odom"/>-->
-      <remap from="odom" to="/base_link"/>
+      <remap from="odom" to="/scanmatch_odom"/>
+      <!--<remap from="odom" to="/base_link"/>-->
 
       <remap from="scan" to="/scan"/>
 
