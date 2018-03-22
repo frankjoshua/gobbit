@@ -191,6 +191,15 @@ services:
   #   network_mode: "host"
   #   command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
 
+########################### Alvar Tag Tracking ############################
+
+  ros-alvar-track:
+    image: frankjoshua/ros-alvar-track
+    build: ./docker_ros_nodes/ros-alvar-track
+    env_file:
+      - ros.env
+    network_mode: "host"
+
 
 ################## DISABLED #####################
   # ros-user-code:
