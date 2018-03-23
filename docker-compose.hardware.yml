@@ -82,7 +82,7 @@ services:
       - ros.env
     network_mode: "host"
     #command: rosrun uvc_camera uvc_camera_node _width:=160 _height:=120 _fps:=30
-    command: rosrun usb_cam usb_cam_node _width:=640 _height:=480 _fps:=30 _camera_frame_id:=camera_link _camera_info_url:=file:///calibration.yaml
+    command: rosrun usb_cam usb_cam_node _width:=640 _height:=480 _fps:=30 _camera_frame_id:=camera_ceiling _camera_info_url:=file:///calibration.yaml _pixel_format:=yuyv
   
   # ros-xv-11-laser:
   #   image: "frankjoshua/docker_ros_xv_11:${ARCH:-latest}"
