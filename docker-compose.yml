@@ -160,19 +160,19 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  # ros-move-base:
-  #   image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-move-base
-  #   env_file:
-  #     - ros.env
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-move-base:
+    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-move-base
+    env_file:
+      - ros.env
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
+    network_mode: "host"
+    restart: unless-stopped
 
 ############################ LINE FOLLOWER ############################
 
@@ -205,13 +205,19 @@ services:
 
 ########################### Alvar Tag Tracking ############################
 
-  ros-alvar-track:
-    image: frankjoshua/ros-alvar-track
-    build: ./docker_ros_nodes/ros-alvar-track
+  # ros-alvar-track:
+  #   image: frankjoshua/ros-alvar-track
+  #   build: ./docker_ros_nodes/ros-alvar-track
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+
+  ros-gzweb:
+    image: frankjoshua/ros-gzweb
+    build: ./docker_ros_nodes/ros-gzweb
     env_file:
       - ros.env
     network_mode: "host"
-
 
 ################## DISABLED #####################
   # ros-user-code:
