@@ -212,9 +212,23 @@ services:
   #     - ros.env
   #   network_mode: "host"
 
-  ros-gzweb:
-    image: frankjoshua/ros-gzweb
-    build: ./docker_ros_nodes/ros-gzweb
+  # ros-gzweb-8:
+  #   image: frankjoshua/ros-gzweb-8
+  #   build: ./docker_ros_nodes/ros-gzweb-8
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+
+  # ros-gzweb-7:
+  #   image: frankjoshua/ros-gzweb-7
+  #   build: ./docker_ros_nodes/ros-gzweb-7
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+
+  ros-gzweb-9:
+    image: frankjoshua/ros-gzweb-9
+    build: ./docker_ros_nodes/ros-gzweb-9
     env_file:
       - ros.env
     network_mode: "host"

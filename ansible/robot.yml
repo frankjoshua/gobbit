@@ -1,4 +1,64 @@
 ---
+- hosts: pi3
+
+  #Prompt for wifi password and ssid for the wpa_supplicant file
+  vars_prompt:
+    - name: "wifi_ssid"
+      prompt: "What is your wifi SSID?"
+      private: no
+    - name: "wifi_password"
+      prompt: "What is your wifi password?"
+      private: yes
+
+  tasks:
+
+  - set_fact:
+      real_ansible_host: "{{ ansible_host }}"
+
+  - name: 'Configure WIFI'
+    become: yes
+    template: src=./files/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf mode=0600
+
+  - name: 'Update APT package cache'
+    become: yes
+    action: apt update_cache=yes
+
+  - name: 'Upgrade APT to the lastest packages'
+    become: yes
+    action: apt upgrade=safe
+
+  - name: 'Reboot'
+    become: yes
+    shell: sleep 2 && reboot
+    async: 1
+    poll: 0
+    ignore_errors: true
+
+  - name: "Wait for Raspberry PI to come back"
+    local_action: wait_for host={{ real_ansible_host }} port=22 state=started delay=10
+    become: false
+
+  - name: Run setup script for I2C
+    shell: /home/pirate/gobbit/setup.sh
+    become: yes
+    ignore_errors: yes
+
+  - name: Fix Hypriot 1.5 bug Step 1
+    apt:
+      name: python-pip
+      state: absent
+    become: yes
+  - name: Fix Hypriot 1.5 bug Step 2
+    easy_install:
+      name: pip
+      state: latest
+    become: yes
+  - name: Fix Hypriot 1.5 bug step 3
+    pip:
+      name: docker
+      version: 2.4.2
+    become: yes
+
 - hosts: robot
   tasks:
 
@@ -21,27 +81,3 @@
         - "8181:8181"
       volumes:
         - "/home/pirate/gobbit:/workspace"
-
-- hosts: pi3
-  tasks:
-
-  - name: Run setup script for I2C
-    shell: /home/pirate/gobbit/setup.sh
-    become: yes
-    ignore_errors: yes
-
-  - name: Fix Hypriot 1.5 bug Step 1
-    apt:
-      name: python-pip
-      state: absent
-    become: yes
-  - name: Fix Hypriot 1.5 bug Step 2
-    easy_install:
-      name: pip
-      state: latest
-    become: yes
-  - name: Fix Hypriot 1.5 bug step 3
-    pip:
-      name: docker
-      version: 2.4.2
-    become: yes
