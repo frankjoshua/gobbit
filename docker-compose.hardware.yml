@@ -76,8 +76,6 @@ services:
     build: ./docker_ros_nodes/ros-usb-cam
     devices:
       - "/dev/video1:/dev/video0"
-    volumes:
-      - "/tmp/ost.yaml:/calibration.yaml"
     env_file:
       - ros.env
     network_mode: "host"

@@ -205,12 +205,14 @@ services:
 
 ########################### Alvar Tag Tracking ############################
 
-  # ros-alvar-track:
-  #   image: frankjoshua/ros-alvar-track
-  #   build: ./docker_ros_nodes/ros-alvar-track
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
+  ros-alvar-track:
+    image: frankjoshua/ros-alvar-track
+    build: ./docker_ros_nodes/ros-alvar-track
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
 
   # ros-gzweb-8:
   #   image: frankjoshua/ros-gzweb-8
@@ -226,12 +228,12 @@ services:
   #     - ros.env
   #   network_mode: "host"
 
-  ros-gzweb-9:
-    image: frankjoshua/ros-gzweb-9
-    build: ./docker_ros_nodes/ros-gzweb-9
-    env_file:
-      - ros.env
-    network_mode: "host"
+  # ros-gzweb-9:
+  #   image: frankjoshua/ros-gzweb-9
+  #   build: ./docker_ros_nodes/ros-gzweb-9
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
 
 ################## DISABLED #####################
   # ros-user-code:

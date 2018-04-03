@@ -26,8 +26,8 @@
   <link name="body_link">
     <visual>
       <geometry>
-        <cylinder length="1.04775" radius="0.2032"/>
-        <!-- <mesh filename="http://localhost:8888/rover.stl" scale="0.015 0.015 0.015"/> -->
+        <!-- <cylinder length="1.04775" radius="0.2032"/> -->
+        <mesh filename="http://localhost:8888/rover.stl" scale="0.015 0.015 0.015"/>
       </geometry>
       <!-- <material name="clear">
         <color rgba="0.75 0.75 0.75 0.4"/>
