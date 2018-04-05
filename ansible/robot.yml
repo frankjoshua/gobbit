@@ -1,6 +1,16 @@
 ---
-- hosts: pi3
+- hosts: all
+  tasks:
+  - name: Install Git repo with robot softare
+    git:
+      repo: https://github.com/frankjoshua/gobbit.git
+      dest: /home/pirate/gobbit
+      update: no
+      accept_hostkey: True
+      ssh_opts: -o StrictHostKeyChecking=no
+    become: no
 
+- hosts: pi3
   #Prompt for wifi password and ssid for the wpa_supplicant file
   vars_prompt:
     - name: "wifi_ssid"
@@ -11,7 +21,6 @@
       private: yes
 
   tasks:
-
   - set_fact:
       real_ansible_host: "{{ ansible_host }}"
 
@@ -19,57 +28,80 @@
     become: yes
     template: src=./files/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf mode=0600
 
-  - name: 'Update APT package cache'
+  - name: Update APT package cache - be patient
     become: yes
     action: apt update_cache=yes
 
-  - name: 'Upgrade APT to the lastest packages'
+  - name: Upgrade APT to the lastest packages - be patient
     become: yes
     action: apt upgrade=safe
 
-  - name: 'Reboot'
+  - name: Update modules to load I2C
     become: yes
-    shell: sleep 2 && reboot
-    async: 1
-    poll: 0
-    ignore_errors: true
+    lineinfile:
+      dest: /etc/modules
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^i2c-bcm2708', line: 'i2c-bcm2708' }
+      - { regexp: '^i2c-dev', line: i2c-dev' }
 
-  - name: "Wait for Raspberry PI to come back"
-    local_action: wait_for host={{ real_ansible_host }} port=22 state=started delay=10
-    become: false
-
-  - name: Run setup script for I2C
-    shell: /home/pirate/gobbit/setup.sh
+  - name: Update boot.config to use I2C
     become: yes
-    ignore_errors: yes
+    lineinfile:
+      dest: /boot/config.txt
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^dtparam=i2c1=', line: 'dtparam=i2c1=on' }
+      - { regexp: '^ddtparam=i2c_arm=', line: 'ddtparam=i2c_arm=on' }
+      - { regexp: '^dtparam=i2c_arm_baudrate=', line: 'dtparam=i2c_arm_baudrate=100010' }
 
-  - name: Fix Hypriot 1.5 bug Step 1
+  - name: Turn of uart to enable wifi for pi3
+    become: yes
+    lineinfile:
+      dest: /boot/config.txt
+      regexp: "^enable_uart="
+      line: "enable_uart=0"
+
+  # - name: 'Reboot'
+  #   become: yes
+  #   shell: sleep 2 && reboot
+  #   async: 1
+  #   poll: 0
+  #   ignore_errors: true
+
+  # - name: "Wait for Raspberry PI to come back"
+  #   local_action: wait_for host={{ real_ansible_host }} port=22 state=started delay=10
+  #   become: false
+  
+  - name: Fix Hypriot 1.5 bug (for docker-py) Step 1
     apt:
       name: python-pip
       state: absent
     become: yes
-  - name: Fix Hypriot 1.5 bug Step 2
+  
+  - name: Fix Hypriot 1.5 bug (for docker-py) Step 2
+    apt:
+      name: python-setuptools
+      state: present
+    become: yes
+
+  - name: Fix Hypriot 1.5 bug (for docker-py) Step 3
     easy_install:
       name: pip
-      state: latest
+      state: present
     become: yes
-  - name: Fix Hypriot 1.5 bug step 3
+
+  - name: Fix Hypriot 1.5 bug (for docker-py) step 4
     pip:
       name: docker
       version: 2.4.2
     become: yes
 
+
 - hosts: robot
   tasks:
-
-  - name: Install Git repo with robot softare
-    git:
-      repo: https://github.com/frankjoshua/gobbit.git
-      dest: /home/pirate/gobbit
-      accept_hostkey: True
-      ssh_opts: -o StrictHostKeyChecking=no
-    become: no
-
   - name: Start Cloud 9 IDE
     docker_container:
       name: c9-ide
@@ -81,3 +113,11 @@
         - "8181:8181"
       volumes:
         - "/home/pirate/gobbit:/workspace"
+
+  - name: display post install message
+    debug:
+      msg:
+        - 'Things left to do:'
+        - '- ssh to pirate@{{ ansible_host }} with password hypriot'
+        - '- cd /home/pirate/gobbit'
+        - '- run ./setup.sh'
