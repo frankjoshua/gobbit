@@ -22,17 +22,18 @@ services:
     cap_add:
       - SYS_RAWIO
     devices:
+      - "/dev/i2c-0:/dev/i2c-0"
       - "/dev/i2c-1:/dev/i2c-1"
       - "/lib/modules:/lib/modules"
       - "/dev/mem:/dev/mem"
     volumes:
-      - /home/pirate/gobbit:/home/pi/gobbit
+      #- /home/pirate/gobbit:/home/pi/gobbit
       - $HOME/gobbit/docker_ros_nodes/ros-adafruit-motor-hat/node.py:/node.py
     privileged: true
     env_file:
       - ros.env
     network_mode: "host"
-    restart: unless-stopped
+    #restart: unless-stopped
     
 ############################ EFIM ############################
 
