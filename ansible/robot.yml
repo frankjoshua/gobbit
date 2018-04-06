@@ -134,5 +134,6 @@
       msg:
         - 'Things left to do:'
         - '- ssh to pirate@{{ ansible_host }} with password hypriot'
+        - '- reboot Rasperry Pi'
         - '- cd /home/pirate/gobbit'
         - '- run ./setup.sh'
