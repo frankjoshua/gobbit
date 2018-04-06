@@ -195,13 +195,13 @@ services:
 
 ########################### Object Detection ############################
 
-  # ros-dnn:
-  #   image: frankjoshua/ros-dnn
-  #   build: ./docker_ros_nodes/ros-dnn
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
+  ros-dnn:
+    image: frankjoshua/ros-dnn
+    build: ./docker_ros_nodes/ros-dnn
+    env_file:
+      - ros.env
+    network_mode: "host"
+    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
 
 ########################### Alvar Tag Tracking ############################
 

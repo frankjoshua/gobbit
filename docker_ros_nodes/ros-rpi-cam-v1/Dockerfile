@@ -1,6 +1,6 @@
-ARG  ROS_VERSION=lunar
+ARG  ROS_VERSION=kinetic
 FROM ros:${ROS_VERSION}-robot
-ARG  ROS_VERSION=lunar
+ARG  ROS_VERSION=kinetic
 
 RUN apt-get update && apt-get install -y \
     ros-${ROS_VERSION}-vision-opencv \
@@ -13,10 +13,16 @@ RUN apt-get update \
     		curl \
     		git \
     		sudo \
+    		unzip \
+    		openssl \
  	&& apt-get clean \
  	&& rm -rf /var/lib/apt/lists/*
 
-RUN git clone --depth 1 https://github.com/raspberrypi/userland.git
+COPY ./userland.zip ./
+RUN unzip userland.zip && mv userland-master userland
+#RUN curl -L https://github.com/raspberrypi/userland/archive/master.zip --output master.zip && unzip master.zip && mv userland-master userland 
+# RUN git config --global http.postBuffer 548576000 &&\
+#     git clone --depth 1 https://github.com/raspberrypi/userland.git
 RUN cd userland && ./buildme
 
 RUN echo "deb http://mirrordirector.raspbian.org/raspbian/ stretch main contrib non-free rpi firmware" >>  /etc/apt/sources.list &&\
