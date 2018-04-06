@@ -44,7 +44,7 @@
       line: "{{ item.line }}"
     with_items:
       - { regexp: '^i2c-bcm2708', line: 'i2c-bcm2708' }
-      - { regexp: '^i2c-dev', line: i2c-dev' }
+      - { regexp: '^i2c-dev', line: 'i2c-dev' }
 
   - name: Update boot.config to use I2C
     become: yes
