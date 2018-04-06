@@ -57,6 +57,16 @@
       - { regexp: '^ddtparam=i2c_arm=', line: 'ddtparam=i2c_arm=on' }
       - { regexp: '^dtparam=i2c_arm_baudrate=', line: 'dtparam=i2c_arm_baudrate=100010' }
 
+  - name: Update boot.config to use Pi cam
+    become: yes
+    lineinfile:
+      dest: /boot/config.txt
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^start_x=', line: 'start_x=1' }
+      - { regexp: '^gpu_mem=', line: 'gpu_mem=128' }
+
   - name: Turn of uart to enable wifi for pi3
     become: yes
     lineinfile:
@@ -97,6 +107,11 @@
     pip:
       name: docker
       version: 2.4.2
+    become: yes
+  
+  - name: Fix Hypriot 1.5 bug (for docker-py) step 5
+    pip:
+      name: docker-compose
     become: yes
 
 
