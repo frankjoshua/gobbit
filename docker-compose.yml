@@ -11,15 +11,20 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    restart: unless-stopped
 
-  # web-server:
+  # web-server-rpi:
   #   image: schoeffm/rpi-nginx-php5
-  #   network_mode: "host"
-  #   privileged: true
-  #   restart: unless-stopped
+  #   ports:
+  #     - "88:80"
   #   volumes:
   #     - $HOME/gobbit/blockly:/usr/share/nginx/www
+
+  web-server:
+    image: nginx
+    ports:
+      - "88:80"
+    volumes:
+      - $HOME/gobbit/blockly:/usr/share/nginx/html
 
   # ros-rosbridge-server:
   #   image: frankjoshua/ros-rpi-rosbridge-server
@@ -228,12 +233,12 @@ services:
   #     - ros.env
   #   network_mode: "host"
 
-  # ros-gzweb-9:
-  #   image: frankjoshua/ros-gzweb-9
-  #   build: ./docker_ros_nodes/ros-gzweb-9
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
+  ros-gzweb-9:
+    image: frankjoshua/ros-gzweb-9
+    build: ./docker_ros_nodes/ros-gzweb-9
+    env_file:
+      - ros.env
+    network_mode: "host"
 
 ################## DISABLED #####################
   # ros-user-code:
