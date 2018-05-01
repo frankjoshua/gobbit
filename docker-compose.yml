@@ -97,18 +97,18 @@ services:
 
 ############################ MAPPING ############################
 
-  ros-map-server:
-    image: "frankjoshua/ros-map-server:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-map-server
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-map-server/map.yaml:/map.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-map-server/map.2048.pgm:/map.2048.pgm
-      - $HOME/gobbit/docker_ros_nodes/ros-map-server/map.512.png:/map.512.png
-      - $HOME/gobbit/docker_ros_nodes/ros-map-server/ros.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-map-server:
+  #   image: "frankjoshua/ros-map-server:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-map-server
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-map-server/map.yaml:/map.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-map-server/map.2048.pgm:/map.2048.pgm
+  #     - $HOME/gobbit/docker_ros_nodes/ros-map-server/map.512.png:/map.512.png
+  #     - $HOME/gobbit/docker_ros_nodes/ros-map-server/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   # ros-gmapping:
   #   image: frankjoshua/ros-gmapping
@@ -160,19 +160,19 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  ros-move-base:
-    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-move-base
-    env_file:
-      - ros.env
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-move-base:
+  #   image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-move-base
+  #   env_file:
+  #     - ros.env
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
+  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
 ############################ LINE FOLLOWER ############################
 
@@ -195,24 +195,24 @@ services:
 
 ########################### Object Detection ############################
 
-  ros-dnn:
-    image: frankjoshua/ros-dnn
-    build: ./docker_ros_nodes/ros-dnn
-    env_file:
-      - ros.env
-    network_mode: "host"
-    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
+  # ros-dnn:
+  #   image: frankjoshua/ros-dnn
+  #   build: ./docker_ros_nodes/ros-dnn
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
 
 ########################### Alvar Tag Tracking ############################
 
-  ros-alvar-track:
-    image: frankjoshua/ros-alvar-track
-    build: ./docker_ros_nodes/ros-alvar-track
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
+  # ros-alvar-track:
+  #   image: frankjoshua/ros-alvar-track
+  #   build: ./docker_ros_nodes/ros-alvar-track
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
 
   # ros-gzweb-8:
   #   image: frankjoshua/ros-gzweb-8
