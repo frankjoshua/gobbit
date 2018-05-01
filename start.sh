@@ -24,9 +24,21 @@ then
   read -p "Enter device ip: " device_ip
 fi
 echo -e "${COLOR2}This is going to take a while......${NO_COLOR}"
+#Create the enviromental variable file
 echo "#Created by script DO NOT EDIT" > ros.env
-echo "ROS_MASTER_URI=http://$device_ip:11311" >> ros.env
-echo "ROS_IP=$device_ip" >> ros.env
+if [ -z "$ROS_MASTER_URI" ]
+then
+  echo "ROS_MASTER_URI=http://$device_ip:11311" >> ros.env
+else
+  echo "ROS_MASTER_URI=$ROS_MASTER_URI" >> ros.env
+fi
+if [ -z "$ROS_IP" ]
+then
+  echo "ROS_IP=$device_ip" >> ros.env
+else
+  echo "ROS_IP=$ROS_IP" >> ros.env
+fi
+#Start Docker containers
 export ARCH=$(dpkg --print-architecture)
 #docker-compose -f docker-compose.yml -f docker-compose.hardware.yml pull
 docker-compose -f docker-compose.yml -f docker-compose.hardware.yml up $@
