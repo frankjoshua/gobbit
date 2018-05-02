@@ -41,4 +41,4 @@ fi
 #Start Docker containers
 export ARCH=$(dpkg --print-architecture)
 #docker-compose -f docker-compose.yml -f docker-compose.hardware.yml pull
-docker-compose -f docker-compose.yml -f docker-compose.hardware.yml up $@
+docker-compose -f docker-compose.yml up $@
