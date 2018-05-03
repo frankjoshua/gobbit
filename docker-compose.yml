@@ -8,4 +8,13 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
+    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
+
+  ros-dnn-tracker:
+    image: frankjoshua/ros-dnn-tracker
+    build: ./docker_ros_nodes/ros-dnn-tracker
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-dnn-tracker/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
