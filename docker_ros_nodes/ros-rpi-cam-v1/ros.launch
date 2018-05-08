@@ -5,7 +5,7 @@
     <param name="width" value="640"/>
     <param name="height" value="480"/>
 
-    <param name="framerate" value="42"/>
+    <param name="framerate" value="10"/>
 <!--    <param name="exposure_mode" value="antishake"/> -->
     <param name="shutter_speed" value="100"/> 
 
