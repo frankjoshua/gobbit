@@ -91,9 +91,7 @@ def listener():
     # run simultaneously.
     rospy.init_node('adafruit_motor_hat_node', anonymous=False)
     rospy.Subscriber("/cmd_vel", Twist, callback, queue_size=1)
-    rospy.Subscriber("/pocketbot/cmd_vel", Twist, controlCallback, queue_size=1)
-
-
+    #rospy.Subscriber("/pocketbot/cmd_vel", Twist, controlCallback, queue_size=1)
     # spin() simply keeps python from exiting until this node is stopped
     rospy.spin()
 
