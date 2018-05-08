@@ -8,7 +8,8 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
+    #command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
+    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
 
   ros-dnn-tracker:
     image: frankjoshua/ros-dnn-tracker
@@ -18,3 +19,33 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
+
+  # ros-usb-cam:
+  #   image: frankjoshua/ros-usb-cam
+  #   build: ./docker_ros_nodes/ros-usb-cam
+  #   devices:
+  #     - "/dev/video1:/dev/video0"
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   #command: rosrun uvc_camera uvc_camera_node _width:=160 _height:=120 _fps:=30
+  #   command: rosrun usb_cam usb_cam_node _width:=640 _height:=480 _fps:=30 _camera_frame_id:=camera_ceiling _camera_info_url:=file:///calibration.yaml _pixel_format:=yuyv
+  
+  ros-alvar-track:
+    image: frankjoshua/ros-alvar-track
+    build: ./docker_ros_nodes/ros-alvar-track
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
+
+  ros-vel-muxer:
+    image: frankjoshua/ros-vel-muxer
+    build: ./docker_ros_nodes/ros-vel-muxer
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 1
