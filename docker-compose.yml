@@ -2,62 +2,29 @@
 version: '3'
 services:
 
-  ros-master:
-    image: "frankjoshua/ros-master:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-master
+  ros-alvar-track:
+    image: frankjoshua/ros-alvar-track
+    build: ./docker_ros_nodes/ros-alvar-track
     volumes:
-      - $HOME/ros:/root/.ros
+      - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
     env_file:
       - ros.env
     network_mode: "host"
 
-  ros-mars-rover-description:
-    image: "frankjoshua/ros-mars-rover-description:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-mars-rover-description
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $HOME/gobbit/docker_ros_nodes/ros-mars-rover-description/model.urdf.xacro:/model.urdf.xacro
-      - $HOME/gobbit/docker_ros_nodes/ros-mars-rover-description/ros.launch:/ros.launch
+  ros-dnn:
+    image: frankjoshua/ros-dnn
+    build: ./docker_ros_nodes/ros-dnn
     env_file:
       - ros.env
     network_mode: "host"
-    restart: unless-stopped
+    #command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
+    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
 
-  ros-usb-cam:
-    image: frankjoshua/ros-usb-cam
-    build: ./docker_ros_nodes/ros-usb-cam
-    devices:
-      - "/dev/video0:/dev/video0"
-    env_file:
-      - ros.env
-    network_mode: "host"
-    #command: rosrun uvc_camera uvc_camera_node _width:=160 _height:=120 _fps:=30
-    command: rosrun usb_cam usb_cam_node _width:=640 _height:=480 _fps:=30 _camera_frame_id:=camera_ceiling _camera_info_url:=file:///calibration.yaml _pixel_format:=yuyv
-
-  ros-motor-hat:
-    image: frankjoshua/ros-adafruit-motor-hat
-    build: ./docker_ros_nodes/ros-adafruit-motor-hat
-    cap_add:
-      - SYS_RAWIO
-    devices:
-      - "/dev/i2c-0:/dev/i2c-0"
-      - "/dev/i2c-1:/dev/i2c-1"
-      - "/lib/modules:/lib/modules"
-      - "/dev/mem:/dev/mem"
+  ros-dnn-tracker:
+    image: frankjoshua/ros-dnn-tracker
+    build: ./docker_ros_nodes/ros-dnn-tracker
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-adafruit-motor-hat/node.py:/node.py
-    privileged: true
+      - $HOME/gobbit/docker_ros_nodes/ros-dnn-tracker/node.py:/node.py
     env_file:
       - ros.env
     network_mode: "host"
-
-  ros-arduino-serial:
-    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros_arduino_serial
-    env_file:
-      - ros.env
-    privileged: true
-    network_mode: "host"
-    volumes:
-      - /dev/ttyACM0:/dev/arduino_motor
-      - /home/nvidia/ros:/root/.ros

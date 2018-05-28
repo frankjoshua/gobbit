@@ -5,6 +5,7 @@ from std_msgs.msg import Float64
 from std_msgs.msg import Float32
 from std_msgs.msg import Empty
 from geometry_msgs.msg import Twist
+import time
 from dnn_detect.msg import DetectedObjectArray
 
 #Motor controller topic
@@ -12,7 +13,7 @@ motorPub = rospy.Publisher('/cmd_vel/computer', Twist, queue_size=1)
 wagPub = rospy.Publisher('/wag_tail', Empty, queue_size=1)
 lastTurn = 0
 cmd = Twist()
-wag = True
+wag = time.time()
 
 def newImage(msg):
     global lastTurn, wag
@@ -30,8 +31,8 @@ def newImage(msg):
         center = xmin + (xmax - xmin) / 2
         turn = (center - screen_center) / screen_width
         if class_name == 'person' and turn != lastTurn: 
-            if wag:
-                wag = False
+            if time.time() - wag > 10:
+                wag = time.time()
                 wagPub.publish(Empty())
             #Turn towards object
             lastTurn = turn
@@ -46,7 +47,6 @@ def newImage(msg):
             #cmd.linear.x = 0
             rospy.loginfo("Got dnn image %s", sortedObjects)    
         else:
-            wag = True
             #Stop
             #cmd.angular.z = cmd.angular.z * 0.5
             cmd.angular.z = -lastTurn
