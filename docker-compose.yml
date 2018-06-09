@@ -2,29 +2,48 @@
 version: '3'
 services:
 
-  ros-alvar-track:
-    image: frankjoshua/ros-alvar-track
-    build: ./docker_ros_nodes/ros-alvar-track
+  ros-master:
+    image: "frankjoshua/ros-master:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-master
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
+      - $HOME/ros:/root/.ros
     env_file:
       - ros.env
     network_mode: "host"
 
-  ros-dnn:
-    image: frankjoshua/ros-dnn
-    build: ./docker_ros_nodes/ros-dnn
+  # ros-irobot-create-2:
+  #   image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-irobot-create-2
+  #   devices:
+  #     - /dev/ttyUSB0:/dev/ttyUSB0
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+
+  ros-vel-muxer:
+    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-vel-muxer
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
     env_file:
       - ros.env
     network_mode: "host"
-    #command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
-    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5
 
-  ros-dnn-tracker:
-    image: frankjoshua/ros-dnn-tracker
-    build: ./docker_ros_nodes/ros-dnn-tracker
+  ros-ydlidar-x4:
+    image: "frankjoshua/ros-ydlidar-x4:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-ydlidar-x4
+    devices:
+      - /dev/ttyUSB0:/dev/ydlidar
+    env_file:
+      - ros.env
+    network_mode: "host"
+
+  ros-hector-mapping:
+    image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hector-mapping
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-dnn-tracker/node.py:/node.py
+      - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
     env_file:
       - ros.env
     network_mode: "host"
