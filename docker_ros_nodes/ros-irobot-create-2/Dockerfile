@@ -41,4 +41,5 @@ RUN /bin/bash -c "apt-get update && \
 COPY ./ros_entrypoint.sh /
 RUN chmod +x ros_entrypoint.sh
 COPY ./ros.launch /
+COPY ./config.yaml /
 CMD ["roslaunch", "--wait", "/ros.launch"]

@@ -1,7 +1,9 @@
 <?xml version="1.0"?>
 <launch>
-  <arg name="config" default="$(find ca_driver)/config/default.yaml" />
+  <arg name="config" default="/config.yaml" />
   <arg name="desc" default="true" />
+
+  <remap from="odom" to="odom_wheel"/>
 
   <node required="true" name="ca_driver" pkg="ca_driver" type="ca_driver" output="screen">
     <rosparam command="load" file="$(arg config)" />
