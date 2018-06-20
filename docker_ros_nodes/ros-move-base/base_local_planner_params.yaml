@@ -1,4 +1,4 @@
-controller_frequency: 5
+controller_frequency: 4
 TrajectoryPlannerROS:
   global_frame_id: base_footprint
   holonomic_robot: false
@@ -16,4 +16,4 @@ TrajectoryPlannerROS:
   oscillation_reset_dist: 0.1
   yaw_goal_tolerance: 0.2
   xy_goal_tolerance: 0.2
-  planner_frequency: 5.0
+  planner_frequency: 1.0
