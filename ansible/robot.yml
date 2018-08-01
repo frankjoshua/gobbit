@@ -127,7 +127,7 @@
     lineinfile:
       dest: /etc/udev/rules.d/10-local.rules
       regexp: '^SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015"'
-      line: 'SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015", SYMLINK+="ydlidar"'
+      line: 'SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015", SYMLINK+="create2"'
       create: yes
 
 - hosts: robot
