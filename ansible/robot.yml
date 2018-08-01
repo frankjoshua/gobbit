@@ -113,7 +113,22 @@
     pip:
       name: docker-compose
     become: yes
-
+    
+  - name: Add udev rule for yplidar
+    become: yes
+    lineinfile:
+      dest: /etc/udev/rules.d/10-local.rules
+      regexp: '^SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60"'
+      line: 'SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="ydlidar"'
+      create: yes
+    
+  - name: Add udev rule for irobot create2 base
+    become: yes
+    lineinfile:
+      dest: /etc/udev/rules.d/10-local.rules
+      regexp: '^SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015"'
+      line: 'SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015", SYMLINK+="ydlidar"'
+      create: yes
 
 - hosts: robot
   tasks:
