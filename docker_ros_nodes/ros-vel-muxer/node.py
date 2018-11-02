@@ -6,24 +6,30 @@ from geometry_msgs.msg import Twist
 
 class VelocityController:
 
-    def __init__(self, computerTopic, manualTopic, outputTopic, manualControlTime):
+    def __init__(self, computerTopic, manualTopic, outputTopic, manualControlTime, xMult, zMult):
         self.computerControl = rospy.Subscriber(computerTopic, Twist, self.computer, queue_size=1)
         self.manualControl = rospy.Subscriber(manualTopic, Twist, self.manual, queue_size=1)
         self.motorPub = rospy.Publisher(outputTopic, Twist, queue_size=1)
         self.manualTime = manualControlTime
         self.lastManual = time.time() - self.manualTime
+        self.xMult = xMult
+        self.zMult = zMult
 
     def manual(self, msg):
         #Send speed to motor
-        self.motorPub.publish(msg)
+        self.publish(msg)
         #Update time since last manual control
         self.lastManual = time.time()
 
     def computer(self, msg):
         #Check if it has been long enough since the last manual control
         if time.time() - self.lastManual > self.manualTime:
-            self.motorPub.publish(msg)
+            self.publish(msg)
         
+    def publish(self, msg):
+        msg.linear.x *= self.xMult
+        msg.angular.z *= self.zMult
+        self.motorPub.publish(msg)
 
 
 def listener():
@@ -37,14 +43,20 @@ def listener():
     ap.add_argument("-o", "--output_topic", required=True,
         help="Topic to redirect control to")
     ap.add_argument("-d", "--delay", required=True,
-        help="Amount of time to keep manual control")    
+        help="Amount of time to keep manual control") 
+    ap.add_argument("-x", "--x_mult", required=True,
+        help="Linear X multiplier")   
+    ap.add_argument("-z", "--z_mult", required=True,
+        help="Angular Z multiplier")  
     args = vars(ap.parse_args())
 
     VelocityController(
         args["computer_topic"],
         args["manual_topic"],
         args["output_topic"],
-        int(float(args["delay"]))
+        int(float(args["delay"])),
+        float(args["x_mult"]),
+        float(args["z_mult"])
     )
     try:
         rospy.spin()
