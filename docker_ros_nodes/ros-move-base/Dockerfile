@@ -1,4 +1,4 @@
-FROM ros:lunar-ros-base
+FROM ros:kinetic-ros-base
 
 RUN apt-get update -y && \
     apt-get install -y ros-$ROS_DISTRO-move-base
