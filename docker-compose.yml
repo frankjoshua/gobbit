@@ -15,7 +15,7 @@ services:
     image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
     build: ./docker_ros_nodes/ros-irobot-create-2
     devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
+      - /dev/create2:/dev/ttyUSB0
     env_file:
       - ros.env
     volumes:
@@ -67,7 +67,7 @@ services:
     image: "frankjoshua/ros-ydlidar-x4:${ARCH:-latest}"
     build: ./docker_ros_nodes/ros-ydlidar-x4
     devices:
-      - /dev/ttyUSB1:/dev/ydlidar
+      - /dev/ydlidar:/dev/ydlidar
     env_file:
       - ros.env
     network_mode: "host"
