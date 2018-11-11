@@ -2,14 +2,6 @@
 version: '3'
 services:
 
-  ros-dnn:
-    image: frankjoshua/ros-dnn
-    build: ./docker_ros_nodes/ros-dnn
-    env_file:
-      - ros.env
-    network_mode: "host"
-    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
-
   # ros-master:
   #   image: "frankjoshua/ros-master:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros-master
@@ -18,6 +10,34 @@ services:
   #   env_file:
   #     - ros.env
   #   network_mode: "host"
+
+  ros-node-launcher:
+    image: frankjoshua/ros-node-launcher
+    build: ./docker_ros_nodes/ros-node-launcher
+    env_file:
+      - ros.env
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    network_mode: "host"
+    command: python /node.py
+
+  # ros-dnn:
+  #   image: frankjoshua/ros-dnn
+  #   build: ./docker_ros_nodes/ros-dnn
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
+
+  # ros-dnn-tracker:
+  #   image: frankjoshua/ros-dnn-tracker
+  #   build: ./docker_ros_nodes/ros-dnn-tracker
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   command: python /node.py
+    
+
 
   # ros-irobot-create-2:
   #   image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
@@ -69,7 +89,7 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.0 -z 0.2
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
 
   # ros-ydlidar-x4:
   #   image: "frankjoshua/ros-ydlidar-x4:${ARCH:-latest}"
