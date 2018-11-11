@@ -2,14 +2,14 @@
 version: '3'
 services:
 
-  # ros-master:
-  #   image: "frankjoshua/ros-master:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-master
-  #   volumes:
-  #     - $HOME/ros:/root/.ros
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
+  ros-master:
+    image: "frankjoshua/ros-master:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-master
+    volumes:
+      - $HOME/ros:/root/.ros
+    env_file:
+      - ros.env
+    network_mode: "host"
 
   ros-node-launcher:
     image: frankjoshua/ros-node-launcher
@@ -36,8 +36,6 @@ services:
   #     - ros.env
   #   network_mode: "host"
   #   command: python /node.py
-    
-
 
   # ros-irobot-create-2:
   #   image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
@@ -81,29 +79,12 @@ services:
   #     - ros.env
   #   network_mode: "host"
 
-  ros-vel-muxer:
-    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-vel-muxer
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
-    env_file:
-      - ros.env
-    network_mode: "host"
-    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
-
   # ros-ydlidar-x4:
   #   image: "frankjoshua/ros-ydlidar-x4:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros-ydlidar-x4
   #   devices:
-  #     - /dev/ttyUSB0:/dev/ydlidar
+  #     - /dev/ydlidar:/dev/ydlidar
   #   env_file:
   #     - ros.env
   #   network_mode: "host"
-
-  # ros-gmapping:
-  #   image: frankjoshua/ros-gmapping
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/gmapping/ros.launch:/ros.launch
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
+  #   command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
