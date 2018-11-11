@@ -2,59 +2,35 @@
 version: '3'
 services:
 
-  ros-master:
-    image: "frankjoshua/ros-master:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-master
+  ros-alvar-track:
+    image: frankjoshua/ros-alvar-track
+    build: ./docker_ros_nodes/ros-alvar-track
     volumes:
-      - $HOME/ros:/root/.ros
+      - $HOME/gobbit/docker_ros_nodes/ros-alvar-track/bundle.launch:/bundle.launch
     env_file:
       - ros.env
     network_mode: "host"
 
-  ros-irobot-create-2:
-    image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-irobot-create-2
-    devices:
-      - /dev/ttyUSB0:/dev/ttyUSB0
-    env_file:
-      - ros.env
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-irobot-create-2/config.yaml:/config.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-irobot-create-2/ros.launch:/ros.launch
-    network_mode: "host"
-
-  ros-hector-mapping:
-    image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-hector-mapping
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
+  ros-dnn:
+    image: frankjoshua/ros-dnn
+    build: ./docker_ros_nodes/ros-dnn
     env_file:
       - ros.env
     network_mode: "host"
+    #command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
+    command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
 
-  ros-move-base:
-    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-move-base
+  ros-dnn-tracker:
+    image: frankjoshua/ros-dnn-tracker
+    build: ./docker_ros_nodes/ros-dnn-tracker
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-dnn-tracker/node.py:/node.py
     env_file:
       - ros.env
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
     network_mode: "host"
-
-  # ros-gmapping:
-  #   image: frankjoshua/ros-gmapping
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/gmapping/ros.launch:/ros.launch
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
 
   ros-vel-muxer:
-    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+    image: frankjoshua/ros-vel-muxer
     build: ./docker_ros_nodes/ros-vel-muxer
     volumes:
       - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
@@ -62,12 +38,3 @@ services:
       - ros.env
     network_mode: "host"
     command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5
-
-  ros-ydlidar-x4:
-    image: "frankjoshua/ros-ydlidar-x4:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-ydlidar-x4
-    devices:
-      - /dev/ttyUSB1:/dev/ydlidar
-    env_file:
-      - ros.env
-    network_mode: "host"
