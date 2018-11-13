@@ -1,66 +1,40 @@
 #!/usr/bin/env python
 import rospy
-from std_msgs.msg import Int32
-from std_msgs.msg import Float64
-from std_msgs.msg import Float32
-from std_msgs.msg import Empty
-from geometry_msgs.msg import Twist
-import time
-from dnn_detect.msg import DetectedObjectArray
+from std_msgs.msg import String
+import docker
+import os
 
-#Motor controller topic
-motorPub = rospy.Publisher('/cmd_vel/computer', Twist, queue_size=1)
-wagPub = rospy.Publisher('/wag_tail', Empty, queue_size=1)
-lastTurn = 0
-cmd = Twist()
-wag = time.time()
+class NodeLauncher:
+    def __init__(self):
+        self.activeContainers = {}
+        rospy.init_node('node_launcher', anonymous=False)
+        #Listen for new detected objects
+        rospy.Subscriber('/launch_node', String, self.launchNode, queue_size=1)
+        rospy.Subscriber('/stop_node', String, self.stopNode, queue_size=1)
 
-def newImage(msg):
-    global lastTurn, wag
-    if msg.objects:
-        #Sort by object size
-        sortedObjects = sorted(msg.objects, key=lambda object: (object.x_max - object.x_min) * (object.y_max - object.y_min))
-        #Sort by object type
-        sortedObjects.sort(key=lambda object: object.class_name, reverse=True)
-        #Find center of object
-        screen_width = 640
-        screen_center = screen_width / 2
-        xmin = sortedObjects[0].x_min
-        xmax = sortedObjects[0].x_max
-        class_name = sortedObjects[0].class_name
-        center = xmin + (xmax - xmin) / 2
-        turn = (center - screen_center) / screen_width
-        if class_name == 'person' and turn != lastTurn: 
-            if time.time() - wag > 10:
-                wag = time.time()
-                wagPub.publish(Empty())
-            #Turn towards object
-            lastTurn = turn
-            cmd.angular.z = -turn * 1.25
-            cmd.linear.y = 0
-            if class_name == 'bottle':
-                cmd.linear.x = 0.5
-            elif class_name == 'person':
-                cmd.linear.x = 0.75
-            else:
-                cmd.linear.x = 0 #-0.2
-            #cmd.linear.x = 0
-            rospy.loginfo("Got dnn image %s", sortedObjects)    
-        else:
-            #Stop
-            #cmd.angular.z = cmd.angular.z * 0.5
-            cmd.angular.z = -lastTurn
-            #cmd.angular.z = 0
-            cmd.linear.y = 0
-            cmd.linear.x = 0
-        motorPub.publish(cmd)
+    def launchNode(self, msg):
+        rospy.loginfo(msg.data)
+        client = docker.from_env()
+        #Launch the container
+        if msg.data == "laser":
+            result = client.containers.run(
+                "frankjoshua/ros-irobot-create-2",
+                environment={"ROS_MASTER_URI": os.environ['ROS_MASTER_URI'], "ROS_IP": os.environ['ROS_IP']},
+                devices=["/dev/ttyUSB0:/dev/ttyUSB0"],
+                network="host",
+                command=["roslaunch", "--wait", "/ros.launch"],
+                detach=True)
+        #Save the container        
+        self.activeContainers[msg.data] = result
+        rospy.loginfo(result)
+
+    def stopNode(self, msg):
+        self.activeContainers[msg.data].stop()
 
 def listener():
-    rospy.init_node('dnn_tracker', anonymous=False)
-    #Listen for new detected objects
-    rospy.Subscriber('/dnn_objects', DetectedObjectArray, newImage, queue_size=1)
+    NodeLauncher()
 
-    rospy.loginfo("DNN tracker Loaded...")
+    rospy.loginfo("Node launcher Loaded...")
 
     rate = rospy.Rate(10) # 10hz
     while not rospy.is_shutdown():

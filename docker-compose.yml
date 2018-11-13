@@ -18,6 +18,7 @@ services:
       - ros.env
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - $HOME/gobbit/docker_ros_nodes/ros-node-launcher/node.py:/node.py
     network_mode: "host"
     command: python /node.py
 
@@ -48,6 +49,7 @@ services:
   #     - $HOME/gobbit/docker_ros_nodes/ros-irobot-create-2/config.yaml:/config.yaml
   #     - $HOME/gobbit/docker_ros_nodes/ros-irobot-create-2/ros.launch:/ros.launch
   #   network_mode: "host"
+    #command: "cat /dev/ttyUSB0"
 
   # ros-hector-mapping:
   #   image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
