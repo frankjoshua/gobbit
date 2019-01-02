@@ -12,24 +12,39 @@ class NodeLauncher:
         rospy.Subscriber('/launch_node', String, self.launchNode, queue_size=1)
         rospy.Subscriber('/stop_node', String, self.stopNode, queue_size=1)
 
+    def createRobotNode(self, client):
+        client.images.pull("frankjoshua/ros-irobot-create-2:armhf")
+        return client.containers.run(
+                "frankjoshua/ros-irobot-create-2:armhf",
+                environment={"ROS_MASTER_URI": os.environ['ROS_MASTER_URI'], "ROS_IP": os.environ['ROS_IP']},
+                devices=["/dev/create2:/dev/ttyUSB0"],
+                network="host",
+                detach=True)
+        
+    def createLaserNode(self, client):
+        client.images.pull("frankjoshua/ros-ydlidar-x4:armhf")
+        return client.containers.run(
+                "frankjoshua/ros-ydlidar-x4:armhf",
+                environment={"ROS_MASTER_URI": os.environ['ROS_MASTER_URI'], "ROS_IP": os.environ['ROS_IP']},
+                devices=["/dev/ydlidar:/dev/ydlidar"],
+                network="host",
+                detach=True)
+                
     def launchNode(self, msg):
         rospy.loginfo(msg.data)
         client = docker.from_env()
         #Launch the container
-        if msg.data == "laser":
-            result = client.containers.run(
-                "frankjoshua/ros-irobot-create-2",
-                environment={"ROS_MASTER_URI": os.environ['ROS_MASTER_URI'], "ROS_IP": os.environ['ROS_IP']},
-                devices=["/dev/ttyUSB0:/dev/ttyUSB0"],
-                network="host",
-                command=["roslaunch", "--wait", "/ros.launch"],
-                detach=True)
+        if msg.data == "robot":
+            result = self.createRobotNode(client)
+        elif msg.data == "laser":
+            result = self.createLaserNode(client)
         #Save the container        
         self.activeContainers[msg.data] = result
         rospy.loginfo(result)
 
     def stopNode(self, msg):
         self.activeContainers[msg.data].stop()
+        
 
 def listener():
     NodeLauncher()

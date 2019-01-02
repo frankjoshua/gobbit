@@ -21,6 +21,16 @@ services:
       - $HOME/gobbit/docker_ros_nodes/ros-node-launcher/node.py:/node.py
     network_mode: "host"
     command: python /node.py
+    
+  ros-irobot-create-2-controls:
+    image: frankjoshua/ros-irobot-create-2-controls
+    build: ./docker_ros_nodes/ros-irobot-create-2-controls
+    env_file:
+      - ros.env
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-irobot-create-2-controls/node.py:/node.py
+    network_mode: "host"
+    command: python /node.py
 
   # ros-dnn:
   #   image: frankjoshua/ros-dnn
@@ -42,7 +52,7 @@ services:
   #   image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros-irobot-create-2
   #   devices:
-  #     - /dev/ttyUSB0:/dev/ttyUSB0
+  #     - /dev/create2:/dev/ttyUSB0
   #   env_file:
   #     - ros.env
   #   volumes:
@@ -51,27 +61,37 @@ services:
   #   network_mode: "host"
     #command: "cat /dev/ttyUSB0"
 
-  # ros-hector-mapping:
-  #   image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-hector-mapping
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
+  ros-hector-mapping:
+    image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hector-mapping
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
 
-  # ros-move-base:
-  #   image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-move-base
-  #   env_file:
-  #     - ros.env
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
-  #   network_mode: "host"
+  ros-move-base:
+    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-move-base
+    env_file:
+      - ros.env
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
+    network_mode: "host"
+
+  ros-vel-muxer:
+    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-vel-muxer
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.4 -z 0.4
 
   # ros-gmapping:
   #   image: frankjoshua/ros-gmapping
