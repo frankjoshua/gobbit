@@ -91,7 +91,7 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.4 -z 0.4
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.3 -z 0.3
 
   # ros-gmapping:
   #   image: frankjoshua/ros-gmapping

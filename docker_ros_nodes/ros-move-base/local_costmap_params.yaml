@@ -4,3 +4,4 @@ local_costmap:
   publish_frequency: 2.0
   static_map: false
   rolling_window: true
+  inflation_radius: 0.07

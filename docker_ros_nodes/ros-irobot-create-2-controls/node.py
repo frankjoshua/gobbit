@@ -77,7 +77,7 @@ class Create2Controls:
         vel_msg.linear.x = -0.075
         # Publishing our vel_msg
         self.motorNode.publish(vel_msg)
-        time.sleep(1)
+        time.sleep(3)
         rospy.loginfo("Stopping.")
         vel_msg.linear.x = 0.0
         # Publishing our vel_msg
