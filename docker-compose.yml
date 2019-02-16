@@ -61,6 +61,16 @@ services:
     network_mode: "host"
     restart: unless-stopped
     
+  ros-vel-muxer:
+    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-vel-muxer
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
+    
   # ros-diff-drive:
   #   image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
   #   build: ./docker_ros_nodes/ros-diff-drive

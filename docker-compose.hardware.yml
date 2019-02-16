@@ -36,17 +36,17 @@ services:
     
 ############################ EFIM ############################
 
-  # ros-arduino-serial:
-  #   image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros_arduino_serial
-  #   env_file:
-  #     - ros.env
-  #   privileged: true
-  #   network_mode: "host"
-  #   volumes:
-  #     - /dev/ttyACM2:/dev/arduino_motor
-  #     - /home/nvidia/ros:/root/.ros
-  #   restart: unless-stopped
+  ros-arduino-serial:
+    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros_arduino_serial
+    env_file:
+      - ros.env
+    privileged: true
+    network_mode: "host"
+    volumes:
+      - /dev/ttyACM1:/dev/arduino_motor
+      - /home/nvidia/ros:/root/.ros
+    restart: unless-stopped       
 
   ros-hokuyo-laser:
     image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"

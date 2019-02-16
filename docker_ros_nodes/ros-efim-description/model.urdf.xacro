@@ -82,9 +82,9 @@
 
   <joint name="camera_joint" type="fixed">
     <axis xyz="0 0 0"/>
-    <parent link="body_link"/>
+    <parent link="base_link"/>
     <child link="camera_link"/>
-    <origin rpy="0 0 0" xyz="0.15 0 -0.25"/>
+    <origin rpy="0 0 0" xyz="0.15 0 0.48"/>
   </joint>
 
     <!-- The fixed joints & links below are usually published by static_transformers launched by the OpenNi launch
@@ -127,9 +127,9 @@
 
   <joint name="laser_joint" type="fixed">
     <axis xyz="0 0 1"/>
-    <parent link="body_link"/>
+    <parent link="base_link"/>
     <child link="laser"/>
-    <origin rpy="0 0 0" xyz="0.0 0 0.75"/>
+    <origin rpy="0 0 0" xyz="0.0 0 1.23"/>
   </joint>
 
   <link name="pocketbot">
