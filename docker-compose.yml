@@ -91,7 +91,48 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
+############################ EFIM ############################
 
+  ros-arduino-serial:
+    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros_arduino_serial
+    env_file:
+      - ros.env
+    privileged: true
+    network_mode: "host"
+    volumes:
+      - /dev/ttyACM1:/dev/arduino_motor
+      - /home/nvidia/ros:/root/.ros
+    restart: unless-stopped       
+
+  ros-hokuyo-laser:
+    image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hokuyo-laser
+    devices:
+      - "/dev/ttyACM0:/dev/hokuyo"
+    volumes:
+      - "$HOME/gobbit/docker_ros_nodes/ros-hokuyo-laser/ros.launch:/ros.launch"
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+    
+  ros-kinect:
+    image: "frankjoshua/ros-kinect:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-kinect
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
+    
+  ros-depthimage-laserscan:
+    image: "frankjoshua/ros-depthimage-laserscan:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-depthimage-laserscan
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
 ############################ MAPPING ############################
 
