@@ -1,6 +1,7 @@
 local_costmap:
-  global_frame: base_link
-  rolling_window: true
+  global_frame: base_footprint
+  update_frequency: 2.0
+  publish_frequency: 2.0
   static_map: false
-  update_frequency: 4.0
-  publish_frequency: 4.0
+  rolling_window: true
+  inflation_radius: 0.07

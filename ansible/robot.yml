@@ -1,15 +1,137 @@
 ---
-- hosts: robot
+- hosts: all
   tasks:
-
   - name: Install Git repo with robot softare
     git:
       repo: https://github.com/frankjoshua/gobbit.git
       dest: /home/pirate/gobbit
+      update: no
       accept_hostkey: True
       ssh_opts: -o StrictHostKeyChecking=no
     become: no
 
+- hosts: pi3
+  #Prompt for wifi password and ssid for the wpa_supplicant file
+  vars_prompt:
+    - name: "wifi_ssid"
+      prompt: "What is your wifi SSID?"
+      private: no
+    - name: "wifi_password"
+      prompt: "What is your wifi password?"
+      private: yes
+
+  tasks:
+  - set_fact:
+      real_ansible_host: "{{ ansible_host }}"
+
+  - name: 'Configure WIFI'
+    become: yes
+    template: src=./files/wpa_supplicant.conf.j2 dest=/etc/wpa_supplicant/wpa_supplicant.conf mode=0600
+
+  - name: Update APT package cache - be patient
+    become: yes
+    action: apt update_cache=yes
+
+  - name: Upgrade APT to the lastest packages - be patient
+    become: yes
+    action: apt upgrade=safe
+
+  - name: Update modules to load I2C
+    become: yes
+    lineinfile:
+      dest: /etc/modules
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^i2c-bcm2708', line: 'i2c-bcm2708' }
+      - { regexp: '^i2c-dev', line: 'i2c-dev' }
+
+  - name: Update boot.config to use I2C
+    become: yes
+    lineinfile:
+      dest: /boot/config.txt
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^dtparam=i2c1=', line: 'dtparam=i2c1=on' }
+      - { regexp: '^ddtparam=i2c_arm=', line: 'ddtparam=i2c_arm=on' }
+      - { regexp: '^dtparam=i2c_arm_baudrate=', line: 'dtparam=i2c_arm_baudrate=100010' }
+
+  - name: Update boot.config to use Pi cam
+    become: yes
+    lineinfile:
+      dest: /boot/config.txt
+      regexp: "{{ item.regexp }}"
+      line: "{{ item.line }}"
+    with_items:
+      - { regexp: '^start_x=', line: 'start_x=1' }
+      - { regexp: '^gpu_mem=', line: 'gpu_mem=128' }
+
+  - name: Turn of uart to enable wifi for pi3
+    become: yes
+    lineinfile:
+      dest: /boot/config.txt
+      regexp: "^enable_uart="
+      line: "enable_uart=0"
+
+  # - name: 'Reboot'
+  #   become: yes
+  #   shell: sleep 2 && reboot
+  #   async: 1
+  #   poll: 0
+  #   ignore_errors: true
+
+  # - name: "Wait for Raspberry PI to come back"
+  #   local_action: wait_for host={{ real_ansible_host }} port=22 state=started delay=10
+  #   become: false
+  
+  - name: Fix Hypriot 1.5 bug (for docker-py) Step 1
+    apt:
+      name: python-pip
+      state: absent
+    become: yes
+  
+  - name: Fix Hypriot 1.5 bug (for docker-py) Step 2
+    apt:
+      name: python-setuptools
+      state: present
+    become: yes
+
+  - name: Fix Hypriot 1.5 bug (for docker-py) Step 3
+    easy_install:
+      name: pip
+      state: present
+    become: yes
+
+  - name: Fix Hypriot 1.5 bug (for docker-py) step 4
+    pip:
+      name: docker
+      version: 2.4.2
+    become: yes
+  
+  - name: Fix Hypriot 1.5 bug (for docker-py) step 5
+    pip:
+      name: docker-compose
+    become: yes
+    
+  - name: Add udev rule for yplidar
+    become: yes
+    lineinfile:
+      dest: /etc/udev/rules.d/10-local.rules
+      regexp: '^SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60"'
+      line: 'SUBSYSTEM=="tty", ATTRS{idVendor}=="10c4", ATTRS{idProduct}=="ea60", SYMLINK+="ydlidar"'
+      create: yes
+    
+  - name: Add udev rule for irobot create2 base
+    become: yes
+    lineinfile:
+      dest: /etc/udev/rules.d/10-local.rules
+      regexp: '^SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015"'
+      line: 'SUBSYSTEM=="tty", ATTRS{idVendor}=="0403", ATTRS{idProduct}=="6015", SYMLINK+="create2"'
+      create: yes
+
+- hosts: robot
+  tasks:
   - name: Start Cloud 9 IDE
     docker_container:
       name: c9-ide
@@ -22,26 +144,9 @@
       volumes:
         - "/home/pirate/gobbit:/workspace"
 
-- hosts: pi3
-  tasks:
-
-  - name: Run setup script for I2C
-    shell: /home/pirate/gobbit/setup.sh
-    become: yes
-    ignore_errors: yes
-
-  - name: Fix Hypriot 1.5 bug Step 1
-    apt:
-      name: python-pip
-      state: absent
-    become: yes
-  - name: Fix Hypriot 1.5 bug Step 2
-    easy_install:
-      name: pip
-      state: latest
-    become: yes
-  - name: Fix Hypriot 1.5 bug step 3
-    pip:
-      name: docker
-      version: 2.4.2
-    become: yes
+  - name: display post install message
+    debug:
+      msg:
+        - 'Things left to do:'
+        - '- ssh to pirate@{{ ansible_host }} with password hypriot'
+        - '- run ./start.sh'

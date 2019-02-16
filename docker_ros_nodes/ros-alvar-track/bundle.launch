@@ -1,0 +1,19 @@
+<launch>
+	<arg name="marker_size" default="1.7" />
+	<arg name="max_new_marker_error" default="0.08" />
+	<arg name="max_track_error" default="0.2" />
+        
+	<arg name="cam_image_topic" default="/usb_cam/image_raw" />
+	<arg name="cam_info_topic" default="/usb_cam/camera_info" />
+        
+	<arg name="output_frame" default="/camera_ceiling" />
+	<arg name="bundle_files" default="/mmarker.xml" />
+
+	<node name="ar_track_alvar" pkg="ar_track_alvar" type="findMarkerBundlesNoKinect" respawn="false" output="screen" 
+	args="$(arg marker_size) $(arg max_new_marker_error) $(arg max_track_error) $(arg cam_image_topic) $(arg cam_info_topic) $(arg output_frame) $(arg bundle_files)" />
+
+	<node pkg="tf" type="static_transform_publisher" name="map_to_camera"
+		args="0.0 0.0 1.84 0.0 3.14 0.0 /map /camera_ceiling 100"/>
+	<node pkg="tf" type="static_transform_publisher" name="tag_to_base"
+		args="0.0 0.0 0.0 0.0 0.0 0.0 /ar_marker_8 /base_footprint 100"/>
+</launch>

@@ -1,8 +1,9 @@
 <launch>
 
+  <param name="use_sim_time" value="true" />
+
   <remap from="/cmd_vel" to="/pocketbot/cmd_vel"/>
 
-  <!-- <include file="$(find gazebo_ros)/launch/rubble_world.launch"/> -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <!-- <arg name="world_name" value="worlds/willowgarage.world"/> -->
     <arg name="paused" value="false"/>
@@ -12,6 +13,11 @@
     <arg name="debug" value="false"/>
   </include>
 
+ <!-- <node pkg="tf" type="static_transform_publisher" name="map_to_odom"
+    args="0.0 0.0 0.0 0.0 0.0 0.0 /map /odom 100"/>
+
+ <node pkg="tf" type="static_transform_publisher" name="odom_to_tag"
+    args="0.0 0.0 0.0 0.0 0.0 0.0 /odom /ar_marker_8 100"/> -->
 
   <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model"
         args="-param robot_description -urdf -model simrobot -x 0 -y 0 -z 1"/>

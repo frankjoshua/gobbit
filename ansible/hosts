@@ -1,3 +1,7 @@
+[all:vars]
+#Since we are setting up a new device this key will always be different (Ansible 2.5 required)
+ansible_ssh_extra_args='-o StrictHostKeyChecking=no'
+
 [robot]
 black-pearl.local ansible_user=pirate ansible_ssh_pass=hypriot
 
