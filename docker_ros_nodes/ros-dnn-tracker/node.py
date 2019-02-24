@@ -19,8 +19,10 @@ def newImage(msg):
     global lastTurn, wag
     if msg.objects:
         #Sort by object size
-        sortedObjects = sorted(msg.objects, key=lambda object: (object.x_max - object.x_min) * (object.y_max - object.y_min))
-        #Sort by object type
+        #sortedObjects = sorted(msg.objects, key=lambda object: object.y_min)
+        #sortedObjects = sorted(msg.objects, key=lambda object: (object.x_max - object.x_min) + (object.y_max - object.y_min))
+        sortedObjects = sorted(msg.objects, key=lambda object: -object.confidence)
+        ##Sort by object type
         sortedObjects.sort(key=lambda object: object.class_name, reverse=True)
         #Find center of object
         screen_width = 640
@@ -36,20 +38,15 @@ def newImage(msg):
                 wagPub.publish(Empty())
             #Turn towards object
             lastTurn = turn
-            cmd.angular.z = -turn * 1.25
+            p = -turn * 1.25
+            cmd.angular.z = p
             cmd.linear.y = 0
-            if class_name == 'bottle':
-                cmd.linear.x = 0.5
-            elif class_name == 'person':
-                cmd.linear.x = 0.75
-            else:
-                cmd.linear.x = 0 #-0.2
-            #cmd.linear.x = 0
+            cmd.linear.x = 0.75
             rospy.loginfo("Got dnn image %s", sortedObjects)    
         else:
             #Stop
             #cmd.angular.z = cmd.angular.z * 0.5
-            cmd.angular.z = -lastTurn
+            cmd.angular.z = -(lastTurn * 0.5)
             #cmd.angular.z = 0
             cmd.linear.y = 0
             cmd.linear.x = 0

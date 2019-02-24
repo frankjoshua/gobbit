@@ -11,16 +11,27 @@ services:
       - ros.env
     network_mode: "host"
 
-  ros-node-launcher:
-    image: frankjoshua/ros-node-launcher
-    build: ./docker_ros_nodes/ros-node-launcher
+  ros-arduino-serial:
+    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros_arduino_serial
     env_file:
       - ros.env
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-      - $HOME/gobbit/docker_ros_nodes/ros-node-launcher/node.py:/node.py
+    privileged: true
     network_mode: "host"
-    command: python /node.py
+    volumes:
+      - /dev/ttyACM1:/dev/arduino_motor
+      - /home/nvidia/ros:/root/.ros
+
+  # ros-node-launcher:
+  #   image: frankjoshua/ros-node-launcher
+  #   build: ./docker_ros_nodes/ros-node-launcher
+  #   env_file:
+  #     - ros.env
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #     - $HOME/gobbit/docker_ros_nodes/ros-node-launcher/node.py:/node.py
+  #   network_mode: "host"
+  #   command: python /node.py
 
   # ros-dnn:
   #   image: frankjoshua/ros-dnn
@@ -35,8 +46,20 @@ services:
   #   build: ./docker_ros_nodes/ros-dnn-tracker
   #   env_file:
   #     - ros.env
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-dnn-tracker/node.py:/node.py
   #   network_mode: "host"
   #   command: python /node.py
+
+  # ros-vel-muxer:
+  #   image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-vel-muxer
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.0 -z 0.3
 
   # ros-irobot-create-2:
   #   image: "frankjoshua/ros-irobot-create-2:${ARCH:-latest}"
