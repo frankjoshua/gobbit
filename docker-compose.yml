@@ -103,7 +103,14 @@ services:
     volumes:
       - /dev/ttyACM1:/dev/arduino_motor
       - /home/nvidia/ros:/root/.ros
-    restart: unless-stopped       
+    restart: unless-stopped
+    
+  ros-diff-drive:
+    image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-diff-drive
+    env_file:
+      - ros.env
+    network_mode: "host"
 
   ros-hokuyo-laser:
     image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
