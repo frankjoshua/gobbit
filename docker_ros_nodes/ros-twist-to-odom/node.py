@@ -27,8 +27,8 @@ class OdomPublisher:
     def run(self, twist):
         
         vx = twist.linear.x
-        vy = twist.linear.y
-        vth = twist.angular.z
+        vy = -twist.linear.y
+        vth = -twist.angular.z
 
         current_time = rospy.Time.now()
 
