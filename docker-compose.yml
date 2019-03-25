@@ -13,6 +13,15 @@ services:
     network_mode: "host"
     restart: unless-stopped
 
+  ros-thermal-dnn:
+    image: "frankjoshua/ros-thermal-dnn:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-thermal-dnn
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-thermal-dnn/node.py:/node.py
+    env_file:
+      - ros.env
+    network_mode: "host"
+
   # web-server:
   #   image: schoeffm/rpi-nginx-php5
   #   network_mode: "host"
@@ -49,27 +58,45 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
   
-  ros-efim-description:
-    image: "frankjoshua/ros-efim-description:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-efim-description
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $HOME/gobbit/docker_ros_nodes/ros-efim-description/model.urdf.xacro:/model.urdf.xacro
-      - $HOME/gobbit/docker_ros_nodes/ros-efim-description/ros.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-efim-description:
+  #   image: "frankjoshua/ros-efim-description:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-efim-description
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - $HOME/gobbit/docker_ros_nodes/ros-efim-description/model.urdf.xacro:/model.urdf.xacro
+  #     - $HOME/gobbit/docker_ros_nodes/ros-efim-description/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
     
-  ros-vel-muxer:
-    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-vel-muxer
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
-    env_file:
-      - ros.env
-    network_mode: "host"
-    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
+  # ros-vel-muxer:
+  #   image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-vel-muxer
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.0 -z 0.2
+
+  # ros-dnn-tracker:
+  #   image: frankjoshua/ros-dnn-tracker
+  #   build: ./docker_ros_nodes/ros-dnn-tracker
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-dnn-tracker/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+
+  # ros-dnn:
+  #   image: frankjoshua/ros-dnn
+  #   build: ./docker_ros_nodes/ros-dnn
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   #command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/raspicam_node image:=image
+  #   command: roslaunch --wait dnn_detect dnn_detect.launch camera:=/usb_cam image:=image_raw
     
   # ros-diff-drive:
   #   image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
@@ -93,27 +120,26 @@ services:
 
 ############################ EFIM ############################
 
-  ros-arduino-serial:
-    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros_arduino_serial
-    env_file:
-      - ros.env
-    privileged: true
-    network_mode: "host"
-    volumes:
-      - /dev/ttyACM0:/dev/arduino_motor
-      - /home/nvidia/ros:/root/.ros
-    restart: unless-stopped
+  # ros-arduino-serial:
+  #   image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros_arduino_serial
+  #   env_file:
+  #     - ros.env
+  #   privileged: true
+  #   network_mode: "host"
+  #   volumes:
+  #     - /dev/ttyUSB0:/dev/arduino_motor
+  #   command: rosrun rosserial_server socket_node
     
-  ros-twist-to-odom:
-    image: "frankjoshua/ros-twist-to-odom:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-twist-to-odom
-    volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-twist-to-odom/node.py:/node.py
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-twist-to-odom:
+  #   image: "frankjoshua/ros-twist-to-odom:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-twist-to-odom
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-twist-to-odom/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   # ros-hokuyo-laser:
   #   image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
