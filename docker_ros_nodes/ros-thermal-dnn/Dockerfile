@@ -26,14 +26,14 @@ RUN ${PIP} install ${TF_PACKAGE}
 COPY bash.bashrc /etc/bash.bashrc
 RUN chmod a+rwx /etc/bash.bashrc
 
-RUN ${PIP} install jupyter pyyaml rospkg
+RUN ${PIP} install jupyter pyyaml rospkg sklearn
 
 RUN mkdir /notebooks && chmod a+rwx /notebooks
 RUN mkdir /.local && chmod a+rwx /.local
 WORKDIR /notebooks
 EXPOSE 8888
 
-CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter notebook --notebook-dir=/notebooks --ip 0.0.0.0 --no-browser --allow-root"]
+CMD ["bash", "-c", "source /etc/bash.bashrc && jupyter notebook --notebook-dir=/notebooks --port 8887 --ip 0.0.0.0 --no-browser --allow-root"]
 
 RUN apt-get install -y python-rosinstall python-rosinstall-generator python-wstool build-essential python-yaml
 # CMD ["python", "/node.py"]

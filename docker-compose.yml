@@ -18,6 +18,7 @@ services:
     build: ./docker_ros_nodes/ros-thermal-dnn
     volumes:
       - $HOME/gobbit/docker_ros_nodes/ros-thermal-dnn/node.py:/node.py
+      - $HOME/notebooks:/notebooks
     env_file:
       - ros.env
     network_mode: "host"
@@ -120,16 +121,15 @@ services:
 
 ############################ EFIM ############################
 
-  # ros-arduino-serial:
-  #   image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros_arduino_serial
-  #   env_file:
-  #     - ros.env
-  #   privileged: true
-  #   network_mode: "host"
-  #   volumes:
-  #     - /dev/ttyUSB0:/dev/arduino_motor
-  #   command: rosrun rosserial_server socket_node
+  ros-arduino-serial:
+    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros_arduino_serial
+    env_file:
+      - ros.env
+    network_mode: "host"
+    devices:
+      - /dev/ttyUSB0:/dev/arduino_motor
+    command: rosrun rosserial_server socket_node
     
   # ros-twist-to-odom:
   #   image: "frankjoshua/ros-twist-to-odom:${ARCH:-latest}"
