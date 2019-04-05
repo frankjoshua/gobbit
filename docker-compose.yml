@@ -127,8 +127,8 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    devices:
-      - /dev/ttyUSB0:/dev/arduino_motor
+    # devices:
+    #   - /dev/ttyUSB0:/dev/arduino_motor
     command: rosrun rosserial_server socket_node
     
   # ros-twist-to-odom:
