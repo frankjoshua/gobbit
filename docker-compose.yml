@@ -69,7 +69,7 @@ services:
     env_file:
       - ros.env
     network_mode: "host"
-    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.5 -z 0.5
     
   # ros-diff-drive:
   #   image: "frankjoshua/ros-diff-drive:${ARCH:-latest}"
@@ -98,51 +98,49 @@ services:
     build: ./docker_ros_nodes/ros_arduino_serial
     env_file:
       - ros.env
-    privileged: true
     network_mode: "host"
-    volumes:
-      - /dev/ttyACM0:/dev/arduino_motor
-      - /home/nvidia/ros:/root/.ros
+    devices:
+      - /dev/ttyACM1:/dev/arduino_motor
     restart: unless-stopped
     
-  ros-twist-to-odom:
-    image: "frankjoshua/ros-twist-to-odom:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-twist-to-odom
+  # ros-twist-to-odom:
+  #   image: "frankjoshua/ros-twist-to-odom:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-twist-to-odom
+  #   volumes:
+  #     - $HOME/gobbit/docker_ros_nodes/ros-twist-to-odom/node.py:/node.py
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
+
+  ros-hokuyo-laser:
+    image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hokuyo-laser
+    devices:
+      - "/dev/ttyACM0:/dev/hokuyo"
     volumes:
-      - $HOME/gobbit/docker_ros_nodes/ros-twist-to-odom/node.py:/node.py
+      - "$HOME/gobbit/docker_ros_nodes/ros-hokuyo-laser/ros.launch:/ros.launch"
     env_file:
       - ros.env
     network_mode: "host"
     restart: unless-stopped
-
-  # ros-hokuyo-laser:
-  #   image: "frankjoshua/ros-hokuyo-laser:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-hokuyo-laser
-  #   devices:
-  #     - "/dev/ttyACM0:/dev/hokuyo"
-  #   volumes:
-  #     - "$HOME/gobbit/docker_ros_nodes/ros-hokuyo-laser/ros.launch:/ros.launch"
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
     
-  # ros-kinect:
-  #   image: "frankjoshua/ros-kinect:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-kinect
-  #   privileged: true
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-kinect:
+    image: "frankjoshua/ros-kinect:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-kinect
+    privileged: true
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
     
-  # ros-depthimage-laserscan:
-  #   image: "frankjoshua/ros-depthimage-laserscan:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-depthimage-laserscan
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-depthimage-laserscan:
+    image: "frankjoshua/ros-depthimage-laserscan:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-depthimage-laserscan
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
 
 ############################ MAPPING ############################
 
@@ -168,15 +166,15 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
   
-  # ros-hector-mapping:
-  #   image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-hector-mapping
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
-  #   env_file:
-  #     - ros.env
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-hector-mapping:
+    image: "frankjoshua/ros-hector-mapping:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-hector-mapping
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-hector-mapping/ros.launch:/ros.launch
+    env_file:
+      - ros.env
+    network_mode: "host"
+    restart: unless-stopped
   
   # ros-rtab-map:
   #   image: "frankjoshua/ros-rtab-map:${ARCH:-latest}"
@@ -209,19 +207,19 @@ services:
   #   network_mode: "host"
   #   restart: unless-stopped
 
-  # ros-move-base:
-  #   image: "frankjoshua/ros-move-base:${ARCH:-latest}"
-  #   build: ./docker_ros_nodes/ros-move-base
-  #   env_file:
-  #     - ros.env
-  #   volumes:
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
-  #     - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
-  #   network_mode: "host"
-  #   restart: unless-stopped
+  ros-move-base:
+    image: "frankjoshua/ros-move-base:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-move-base
+    env_file:
+      - ros.env
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/ros.launch:/ros.launch
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/base_local_planner_params.yaml:/base_local_planner_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/costmap_common_params.yaml:/costmap_common_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/global_costmap_params.yaml:/global_costmap_params.yaml
+      - $HOME/gobbit/docker_ros_nodes/ros-move-base/local_costmap_params.yaml:/local_costmap_params.yaml
+    network_mode: "host"
+    restart: unless-stopped
 
 ############################ LINE FOLLOWER ############################
 

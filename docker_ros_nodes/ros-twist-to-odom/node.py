@@ -48,7 +48,7 @@ class OdomPublisher:
             (self.x, self.y, 0.),
             odom_quat,
             current_time,
-            "base_link",
+            "base_footprint",
             "odom/encoder"
         )
 
@@ -61,7 +61,7 @@ class OdomPublisher:
         odom.pose.pose = Pose(Point(self.x, self.y, 0.), Quaternion(*odom_quat))
 
         # set the velocity
-        odom.child_frame_id = "base_link"
+        odom.child_frame_id = "base_footprint"
         odom.twist.twist = Twist(Vector3(vx, vy, 0), Vector3(0, 0, vth))
 
         # publish the message
