@@ -5,6 +5,30 @@
        xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
        xmlns:xacro="http://ros.org/wiki/xacro">
 
+  <!-- BASE-FOOTPRINT -->
+  <!-- base_footprint is a fictitious link(frame) that is on the ground right below base_link origin -->
+  <link name="base_footprint">
+    <inertial>
+      <mass value="0.0001" />
+      <origin xyz="0 0 0" />
+      <inertia ixx="0.0001" ixy="0.0" ixz="0.0"
+          iyy="0.0001" iyz="0.0" 
+          izz="0.0001" />
+    </inertial>
+    <visual>
+        <origin xyz="0 0 0" rpy="0 0 0" />
+        <geometry>
+            <box size="0.001 0.001 0.001" />
+        </geometry>
+    </visual>
+  </link>
+
+  <joint name="base_footprint_joint" type="fixed">
+    <origin xyz="0 0 0" rpy="0 0 0" />
+    <parent link="base_footprint"/>
+    <child link="base_link" />
+  </joint>
+  
   <link name="base_link">
     <visual>
       <geometry>
@@ -82,9 +106,9 @@
 
   <joint name="camera_joint" type="fixed">
     <axis xyz="0 0 0"/>
-    <parent link="body_link"/>
+    <parent link="base_link"/>
     <child link="camera_link"/>
-    <origin rpy="0 0 0" xyz="0.15 0 -0.25"/>
+    <origin rpy="0 0 0" xyz="0.15 0 0.48"/>
   </joint>
 
     <!-- The fixed joints & links below are usually published by static_transformers launched by the OpenNi launch
@@ -127,9 +151,9 @@
 
   <joint name="laser_joint" type="fixed">
     <axis xyz="0 0 1"/>
-    <parent link="body_link"/>
+    <parent link="base_link"/>
     <child link="laser"/>
-    <origin rpy="0 0 0" xyz="0.0 0 0.75"/>
+    <origin rpy="0 0 0" xyz="0.0 0 1.23"/>
   </joint>
 
   <link name="pocketbot">

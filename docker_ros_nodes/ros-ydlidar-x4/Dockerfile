@@ -28,7 +28,7 @@ RUN /bin/bash -c "apt-get update && \
                   source /opt/ros/$ROS_DISTRO/setup.bash && \
                   mkdir -p /catkin_ws/src && \
                   cd /catkin_ws/src && \
-                  git clone https://github.com/AutonomyLab/create_autonomy.git && \
+                  git clone https://github.com/EAIBOT/ydlidar.git && \
                   catkin_init_workspace && \
                   cd /catkin_ws/ && \
                   apt-get update && \
@@ -40,6 +40,4 @@ RUN /bin/bash -c "apt-get update && \
 
 COPY ./ros_entrypoint.sh /
 RUN chmod +x ros_entrypoint.sh
-COPY ./ros.launch /
-COPY ./config.yaml /
-CMD ["roslaunch", "--wait", "/ros.launch"]
+CMD ["rosrun", "ydlidar", "ydlidar_node", "_frame_id:=base_link"]
