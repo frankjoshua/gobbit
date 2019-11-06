@@ -2,26 +2,26 @@
 version: '3'
 services:
 
-  ros-master:
-    image: "frankjoshua/ros-master:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-master
-    volumes:
-      - $HOME/ros:/root/.ros
-    env_file:
-      - ros.env
-    network_mode: "host"
+  # ros-master:
+  #   image: "frankjoshua/ros-master:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-master
+  #   volumes:
+  #     - $HOME/ros:/root/.ros
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
 
-  ros-mars-rover-description:
-    image: "frankjoshua/ros-mars-rover-description:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros-mars-rover-description
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - $HOME/gobbit/docker_ros_nodes/ros-mars-rover-description/model.urdf.xacro:/model.urdf.xacro
-      - $HOME/gobbit/docker_ros_nodes/ros-mars-rover-description/ros.launch:/ros.launch
-    env_file:
-      - ros.env
-    network_mode: "host"
-    restart: unless-stopped
+  # ros-mars-rover-description:
+  #   image: "frankjoshua/ros-mars-rover-description:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros-mars-rover-description
+  #   volumes:
+  #     - /etc/localtime:/etc/localtime:ro
+  #     - $HOME/gobbit/docker_ros_nodes/ros-mars-rover-description/model.urdf.xacro:/model.urdf.xacro
+  #     - $HOME/gobbit/docker_ros_nodes/ros-mars-rover-description/ros.launch:/ros.launch
+  #   env_file:
+  #     - ros.env
+  #   network_mode: "host"
+  #   restart: unless-stopped
 
   ros-usb-cam:
     image: frankjoshua/ros-usb-cam
@@ -32,7 +32,7 @@ services:
       - ros.env
     network_mode: "host"
     #command: rosrun uvc_camera uvc_camera_node _width:=160 _height:=120 _fps:=30
-    command: rosrun usb_cam usb_cam_node _width:=640 _height:=480 _fps:=30 _camera_frame_id:=camera_ceiling _camera_info_url:=file:///calibration.yaml _pixel_format:=yuyv
+    command: rosrun usb_cam usb_cam_node _width:=320 _height:=240 _fps:=30 _camera_frame_id:=camera_ceiling _camera_info_url:=file:///calibration.yaml _pixel_format:=yuyv
 
   ros-motor-hat:
     image: frankjoshua/ros-adafruit-motor-hat
@@ -51,13 +51,23 @@ services:
       - ros.env
     network_mode: "host"
 
-  ros-arduino-serial:
-    image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
-    build: ./docker_ros_nodes/ros_arduino_serial
+  # ros-arduino-serial:
+  #   image: "frankjoshua/ros-arduino-serial:${ARCH:-latest}"
+  #   build: ./docker_ros_nodes/ros_arduino_serial
+  #   env_file:
+  #     - ros.env
+  #   privileged: true
+  #   network_mode: "host"
+  #   volumes:
+  #     - /dev/ttyACM0:/dev/arduino_motor
+  #     - /home/nvidia/ros:/root/.ros
+
+  ros-vel-muxer:
+    image: "frankjoshua/ros-vel-muxer:${ARCH:-latest}"
+    build: ./docker_ros_nodes/ros-vel-muxer
+    volumes:
+      - $HOME/gobbit/docker_ros_nodes/ros-vel-muxer/node.py:/node.py
     env_file:
       - ros.env
-    privileged: true
     network_mode: "host"
-    volumes:
-      - /dev/ttyACM0:/dev/arduino_motor
-      - /home/nvidia/ros:/root/.ros
+    command: python /node.py --computer_topic /cmd_vel/computer --manual_topic /pocketbot/cmd_vel --output_topic /cmd_vel --delay 5 -x 0.2 -z 0.2
